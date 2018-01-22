@@ -1,2 +1,2 @@
-# docker-image
-My custom docker images
+# My Docker Images
+My custom Docker images
