@@ -1,3 +1,16 @@
+###
+# fabioassuncao/docker-images
+#
+# This Dockerfile was modified by Fábio Assunção <fabio23gt@gmail.com>
+# Date 2018-01-23
+# See the original in https://github.com/codecasts/ambientum
+#
+# Repository:    PHP
+# Image:         CLI/Base
+# Version:       7.1.x
+# Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
+# Base distro:   debian:jessie
+#
 FROM debian:jessie
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>

@@ -1,3 +1,12 @@
+###
+# fabioassuncao/docker-images
+#
+# Repository:    PHP
+# Image:         CLI/Base
+# Version:       7.1.x
+# Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
+# Base distro:   debian:jessie
+#
 FROM fabioassuncao/php:7.1
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
