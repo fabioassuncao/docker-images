@@ -32,6 +32,7 @@ RUN echo "# Fixing permissions" && \
 # Copy nginx and entry script
 COPY configs/nginx.conf /etc/nginx/nginx.conf
 COPY start.sh  /home/docker-user/start.sh
+COPY app /var/www/app
 
 RUN chmod +x /home/docker-user/start.sh && \
     chown -R docker-user:docker-user /home/docker-user

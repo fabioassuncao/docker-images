@@ -42,7 +42,8 @@ RUN echo "# Fixing permissions" && \
 COPY configs/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY configs/ports.conf /etc/apache2/ports.conf
 COPY configs/fastcgi.conf /etc/apache2/mods-available/fastcgi.conf
-COPY start.sh  /home/docker-user/start.sh
+COPY start.sh /home/docker-user/start.sh
+COPY app /var/www/app
 
 RUN chmod +x /home/docker-user/start.sh && \
     chown -R docker-user:docker-user /home/docker-user

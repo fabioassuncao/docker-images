@@ -15,6 +15,12 @@ FROM debian:jessie
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
+# PHP Timezone
+ENV TIMEZONE=America/Sao_Paulo
+
+# Locale
+ENV LOCALE pt_BR.UTF-8
+
 # Variable for enabling XDEBUG
 ENV XDEBUG_ENABLED=false
 
@@ -31,7 +37,15 @@ RUN echo "# Updating Repository" && \
     wget \
     nano \
     vim \
-    sudo
+    sudo \
+    locales
+
+# Install locale
+RUN \
+  sed -i -e "s/# $LOCALE/$LOCALE/" /etc/locale.gen && \
+  echo "LANG=$LOCALE">/etc/default/locale && \
+  dpkg-reconfigure --frontend=noninteractive locales && \
+  update-locale LANG=$LOCALE
 
 # Install PHP From DotDeb, Common Extensions
 RUN echo "# Preparing and Installing PHP" && \
@@ -96,6 +110,14 @@ RUN echo "# Configuring PHP" && \
     sed -i "/post_max_size = .*/c\post_max_size = 1000M" /etc/php/7.1/fpm/php.ini && \
     sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 1000M" /etc/php/7.1/fpm/php.ini && \
     sed -i "/zend_extension=xdebug.so/c\;zend_extension=xdebug.so" /etc/php/7.1/mods-available/xdebug.ini
+
+# PHP Timezone
+RUN \
+  echo $TIMEZONE | tee /etc/timezone && \
+  dpkg-reconfigure --frontend noninteractive tzdata && \
+  echo "date.timezone = \"$TIMEZONE\";" > /etc/php/7.1/apache2/conf.d/timezone.ini && \
+  echo "date.timezone = \"$TIMEZONE\";" > /etc/php/7.1/cli/conf.d/timezone.ini
+
 
 RUN chmod +x /scripts/start.sh && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
