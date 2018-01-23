@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# This script is a fork
+# This script was modified by Fábio Assunção <fabio23gt@gmail.com>
+# Date 2018-01-22
 # See the original in https://github.com/codecasts/ambientum/blob/master/build.sh
 
 # if there is a env file, source it
@@ -31,7 +32,7 @@ function build_repository {
     # build all enabled versions
     for TAG in $TAGS; do
       # some verbose
-      echo $'\n\n'"--> Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+      echo $'\n\n'"# Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
       cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
 
       if [ $USE_CACHE == true ]; then
@@ -45,7 +46,7 @@ function build_repository {
     done
 
     # create the latest tag
-    echo $'\n\n'"--> Aliasing $LATEST as 'latest'"$'\n'
+    echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
     docker tag $NAMESPACE/$REPOSITORY:$LATEST $NAMESPACE/$REPOSITORY:latest
 }
 
@@ -57,13 +58,13 @@ function publish_repository {
     # publish all enabled versions
     for TAG in $TAGS; do
       # some verbose
-      echo $'\n\n'"--> Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+      echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
       # publish
       docker push $NAMESPACE/$REPOSITORY:$TAG
     done
 
     # create the latest tag
-    echo $'\n\n'"--> Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
+    echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
     docker push $NAMESPACE/$REPOSITORY:latest
 }
 
