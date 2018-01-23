@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:jessie
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
@@ -22,7 +22,7 @@ RUN echo "# Updating Repository" && \
 
 # Install PHP From DotDeb, Common Extensions
 RUN echo "# Preparing and Installing PHP" && \
-    echo "deb http://packages.sury.org/php/ stretch main" > /etc/apt/sources.list.d/php.list && \
+    echo "deb http://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     apt-get update -y && \
     apt-get -y install \
