@@ -18,9 +18,6 @@ MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 # PHP Timezone
 ENV TIMEZONE=America/Sao_Paulo
 
-# Locale
-ENV LOCALE pt_BR.UTF-8
-
 # Variable for enabling XDEBUG
 ENV XDEBUG_ENABLED=false
 
@@ -37,15 +34,7 @@ RUN echo "# Updating Repository" && \
     wget \
     nano \
     vim \
-    sudo \
-    locales
-
-# Install locale
-RUN \
-  sed -i -e "s/# $LOCALE/$LOCALE/" /etc/locale.gen && \
-  echo "LANG=$LOCALE">/etc/default/locale && \
-  dpkg-reconfigure --frontend=noninteractive locales && \
-  update-locale LANG=$LOCALE
+    sudo
 
 # Install PHP From DotDeb, Common Extensions
 RUN echo "# Preparing and Installing PHP" && \
