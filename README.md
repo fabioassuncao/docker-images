@@ -1,5 +1,5 @@
-# My Docker Images
-My custom Docker images
+# Codions Docker Images
+Custom docker images for development and production
 
 ## Note
 This project contains parts of the [codecasts/ambientum](https://github.com/codecasts/ambientum) repository
