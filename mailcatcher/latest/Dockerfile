@@ -1,5 +1,5 @@
 ###
-# fabioassuncao/docker-images
+# codions/docker-images
 #
 # Repository:    MailCatcher
 # Version:       0.6

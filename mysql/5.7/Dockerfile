@@ -1,9 +1,9 @@
 ###
-# fabioassuncao/docker-images
+# codions/docker-images
 #
 # Repository:    MySQL
 # Image:         CLI/Base
-# Version:       5.6
+# Version:       5.7
 # Strategy:      Based on mysql:5.6
 # Base distro:   debian:jessie
 #
