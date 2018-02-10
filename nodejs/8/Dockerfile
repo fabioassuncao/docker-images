@@ -1,5 +1,5 @@
 ###
-# fabioassuncao/docker-images
+# codions/docker-images
 #
 # This Dockerfile was modified by Fábio Assunção <fabio23gt@gmail.com>
 # Date 2018-01-23

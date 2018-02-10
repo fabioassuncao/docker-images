@@ -18,7 +18,7 @@ REPOSITORIES=$1
 
 # enable all repositories if any specified
 if [[ -z $REPOSITORIES ]]; then
-    REPOSITORIES="mailcatcher mariadb mysql nodejs php"
+    REPOSITORIES="mailcatcher mariadb mysql nodejs php postgres redis"
 fi
 
 # for returning later to the main directory
