@@ -1,4 +1,4 @@
-# Codions Docker Images
+# Codions Docker
 Custom docker images for development and production
 
 ## Note
