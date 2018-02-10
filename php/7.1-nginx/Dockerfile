@@ -7,7 +7,7 @@
 # Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
 # Base distro:   debian:jessie
 #
-FROM fabioassuncao/php:7.1
+FROM codions/php:7.1
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
@@ -25,20 +25,20 @@ RUN echo "# Cleaning up" && \
 
 RUN echo "# Fixing permissions" && \
     mkdir /var/run/nginx && \
-    chown -R docker-user:docker-user /var/run/nginx && \
-    chown -R docker-user:docker-user /var/log/nginx && \
-    chown -R docker-user:docker-user /var/lib/nginx
+    chown -R codions:codions /var/run/nginx && \
+    chown -R codions:codions /var/log/nginx && \
+    chown -R codions:codions /var/lib/nginx
 
 # Copy nginx and entry script
 COPY configs/nginx.conf /etc/nginx/nginx.conf
-COPY start.sh  /home/docker-user/start.sh
+COPY start.sh  /home/codions/start.sh
 COPY app /var/www/app
 
-RUN chmod +x /home/docker-user/start.sh && \
-    chown -R docker-user:docker-user /home/docker-user
+RUN chmod +x /home/codions/start.sh && \
+    chown -R codions:codions /home/codions
 
 # Define the running user
-USER docker-user
+USER codions
 
 # Application directory
 WORKDIR "/var/www/app"
@@ -47,4 +47,4 @@ WORKDIR "/var/www/app"
 EXPOSE 8080
 
 # Starts a single shell script that puts php-fpm as a daemon and nginx on foreground
-CMD ["/home/docker-user/start.sh"]
+CMD ["/home/codions/start.sh"]
