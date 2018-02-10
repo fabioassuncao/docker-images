@@ -15,9 +15,6 @@ FROM debian:jessie
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
-# PHP Timezone
-ENV TIMEZONE=America/Sao_Paulo
-
 # Variable for enabling XDEBUG
 ENV XDEBUG_ENABLED=false
 
@@ -74,21 +71,21 @@ RUN echo "# Installing Composer" && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-# Adding the docker-user
-RUN echo "# Adding the docker-user" && \
-    adduser --disabled-password --gecos "" docker-user && \
+# Adding the codions
+RUN echo "# Adding the codions" && \
+    adduser --disabled-password --gecos "" codions && \
     mkdir -p /var/www/app && \
-    chown -R docker-user:docker-user /var/www
+    chown -R codions:codions /var/www
 
 # Add the ENTRYPOINT script
 ADD start.sh /scripts/start.sh
 
 RUN echo "# Configuring PHP" && \
-    echo "docker-user  ALL = ( ALL ) NOPASSWD: ALL" >> /etc/sudoers && \
-    sed -i "/user = .*/c\user = docker-user" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/^group = .*/c\group = docker-user" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/listen.owner = .*/c\listen.owner = docker-user" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/listen.group = .*/c\listen.group = docker-user" /etc/php/7.1/fpm/pool.d/www.conf && \
+    echo "codions  ALL = ( ALL ) NOPASSWD: ALL" >> /etc/sudoers && \
+    sed -i "/user = .*/c\user = codions" /etc/php/7.1/fpm/pool.d/www.conf && \
+    sed -i "/^group = .*/c\group = codions" /etc/php/7.1/fpm/pool.d/www.conf && \
+    sed -i "/listen.owner = .*/c\listen.owner = codions" /etc/php/7.1/fpm/pool.d/www.conf && \
+    sed -i "/listen.group = .*/c\listen.group = codions" /etc/php/7.1/fpm/pool.d/www.conf && \
     sed -i "/listen = .*/c\listen = [::]:9000" /etc/php/7.1/fpm/pool.d/www.conf && \
     sed -i "/;access.log = .*/c\access.log = /proc/self/fd/2" /etc/php/7.1/fpm/pool.d/www.conf && \
     sed -i "/;clear_env = .*/c\clear_env = no" /etc/php/7.1/fpm/pool.d/www.conf && \
@@ -100,14 +97,6 @@ RUN echo "# Configuring PHP" && \
     sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 1000M" /etc/php/7.1/fpm/php.ini && \
     sed -i "/zend_extension=xdebug.so/c\;zend_extension=xdebug.so" /etc/php/7.1/mods-available/xdebug.ini
 
-# PHP Timezone
-RUN \
-  echo $TIMEZONE | tee /etc/timezone && \
-  dpkg-reconfigure --frontend noninteractive tzdata && \
-  echo "date.timezone = \"$TIMEZONE\";" > /etc/php/7.1/apache2/conf.d/timezone.ini && \
-  echo "date.timezone = \"$TIMEZONE\";" > /etc/php/7.1/cli/conf.d/timezone.ini
-
-
 RUN chmod +x /scripts/start.sh && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
@@ -116,12 +105,12 @@ ADD https://github.com/krallin/tini/releases/download/v0.10.0/tini /tini
 RUN chmod +x /tini
 
 # Define the running user
-USER docker-user
+USER codions
 
 # Application directory
 WORKDIR "/var/www/app"
 
-ENV PATH=/home/docker-user/.composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH=/home/codions/.composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Define the entry point
 ENTRYPOINT ["/tini", "--", "/scripts/start.sh"]

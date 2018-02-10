@@ -16,11 +16,11 @@ FROM mhart/alpine-node:8
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
 # Variables for enabling NewRelic
-ENV NPM_PACKAGES="/home/docker-user/.cache/npm-packages" \
-    NODE_PATH="/home/docker-user/.cache/npm-packages/lib/node_modules" \
-    MANPATH="/home/docker-user/.cache/npm-packages/share/man:/usr/share/man" \
-    PREFIX='/home/docker-user/.local' \
-    PATH="/home/docker-user/.local/bin:/home/docker-user/.cache/npm-packages/bin:/home/docker-user/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+ENV NPM_PACKAGES="/home/codions/.cache/npm-packages" \
+    NODE_PATH="/home/codions/.cache/npm-packages/lib/node_modules" \
+    MANPATH="/home/codions/.cache/npm-packages/share/man:/usr/share/man" \
+    PREFIX='/home/codions/.local' \
+    PATH="/home/codions/.local/bin:/home/codions/.cache/npm-packages/bin:/home/codions/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
     TERM=xterm-256color \
     COLORTERM=truecolor
 
@@ -44,20 +44,20 @@ RUN echo "# Installing base dependencies" && \
 RUN echo "# Cleaning up" && \
     rm -rf /tmp/*
 
-RUN echo "# Adding the docker-user user" && \
-    adduser -D -u 1000 docker-user && \
+RUN echo "# Adding the codions user" && \
+    adduser -D -u 1000 codions && \
     mkdir -p /var/www/app && \
-    chown -R docker-user:docker-user /var/www && \
+    chown -R codions:codions /var/www && \
     wget -O /tini https://github.com/krallin/tini/releases/download/v0.16.1/tini-static && \
     chmod +x /tini && \
-    chown -R docker-user:docker-user /home/docker-user && \
+    chown -R codions:codions /home/codions && \
     rm -rf /tmp/*
 
 # Define the running user
-USER docker-user
+USER codions
 
 # Add the ENTRYPOINT script
-ADD bashrc /home/docker-user/.bashrc
+ADD bashrc /home/codions/.bashrc
 
 
 # Application directory

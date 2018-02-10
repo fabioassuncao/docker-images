@@ -7,7 +7,7 @@
 # Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
 # Base distro:   debian:jessie
 #
-FROM fabioassuncao/php:7.1
+FROM codions/php:7.1
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
@@ -33,23 +33,23 @@ RUN echo "# Adding contrib and non-free components in source.list" && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 RUN echo "# Fixing permissions" && \
-    chown -R docker-user:docker-user /var/run/apache2 && \
-    chown -R docker-user:docker-user /var/log/apache2 && \
-    chown -R docker-user:docker-user /var/lock/apache2 && \
-    chown -R docker-user:docker-user /var/lib/apache2
+    chown -R codions:codions /var/run/apache2 && \
+    chown -R codions:codions /var/log/apache2 && \
+    chown -R codions:codions /var/lock/apache2 && \
+    chown -R codions:codions /var/lib/apache2
 
 # Copy apache, fastcgi and entry script
 COPY configs/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY configs/ports.conf /etc/apache2/ports.conf
 COPY configs/fastcgi.conf /etc/apache2/mods-available/fastcgi.conf
-COPY start.sh /home/docker-user/start.sh
+COPY start.sh /home/codions/start.sh
 COPY app /var/www/app
 
-RUN chmod +x /home/docker-user/start.sh && \
-    chown -R docker-user:docker-user /home/docker-user
+RUN chmod +x /home/codions/start.sh && \
+    chown -R codions:codions /home/codions
 
 # Define the running user
-USER docker-user
+USER codions
 
 # Application directory
 WORKDIR "/var/www/app"
@@ -58,4 +58,4 @@ WORKDIR "/var/www/app"
 EXPOSE 8080
 
 # Starts a single shell script that puts php-fpm as a daemon and apache2 on foreground
-CMD ["/home/docker-user/start.sh"]
+CMD ["/home/codions/start.sh"]
