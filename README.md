@@ -1,22 +1,22 @@
 # Codions Docker
-Custom docker images for development and production
+Imagens docker personalizadas para desenvolvimento e produção
 
-## Note
-This project contains parts of the [codecasts/ambientum](https://github.com/codecasts/ambientum) repository
+## Importante
+Este projeto possui partes do repositório [codecasts/ambientum](https://github.com/codecasts/ambientum)
 
-## Contributing
+## Contribuindo
 
-1. Fork it!
-2. Create your feature branch from **develop**: `git checkout -b feature/my-new-feature`
-3. Write your code. Comment your code.
-4. Commit your changes: `git commit -am 'Add some feature'`
-5. Push to the branch: `git push origin feature/my-new-feature`
-6. Submit a pull request to **develop** branch
+1. Fork este repositório!
+2. Crie sua feature a partir da branch **develop**: `git checkout -b feature/my-new-feature`
+3. Escreva e comente seu código.
+4. Commit suas alterações: `git commit -am 'Add some feature'`
+5. Faça um `push` para a branch: `git push origin feature/my-new-feature`
+6. Faça um `pull request` para a branch **develop**
 
-## Credits
+## Créditos
 
-[Fábio Assunção](https://github.com/fabioassuncao) and dedicated [contributors](https://github.com/fabioassuncao/docker-images/graphs/contributors).
+[Fábio Assunção](https://github.com/fabioassuncao) e todos os [contribuidores](https://github.com/fabioassuncao/docker-images/graphs/contributors).
 
-## License
+## Licença
 
-Licensed under the MIT license.
+Licenciado sob a licença MIT.
