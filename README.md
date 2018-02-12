@@ -18,6 +18,39 @@ Este projeto possui partes do repositório [codecasts/ambientum](https://github.
 |                     | `10.2`           | MariaDB Server v10.2                 |              |
 
 
+## Guia de uso rápido dos comandos
+
+### Substituindo comandos locais:
+Uma das características deste projeto é permitir que você substitua os comandos com a versão baseada no docker.
+
+Há um conjunto de atalhos que podem ajudar com essa tarefa, mas para isso será necessário fazer a instalação
+
+#### Instalação:
+```
+curl -sSL https://raw.githubusercontent.com/codions/docker-images/master/commands/installer.sh | bash
+```
+
+Depois de fazer a instalação dos comandos, seguindo as instruções acima, você poderá usá-los imediatamente.
+
+#### Importante: A primeira execução pode levar algum tempo, uma vez que irá baixar as imagens
+
+Tudo que for relacionado ao Node.JS pode ser executado prefixando o comando `n`. Por exemplo, digamos que precisamos instalar o Gulp
+```
+n npm install -g gulp
+n gulp --version
+```
+
+Tudo relacionado ao PHP pode ser executado prefixando o comando `p`. Por exemplo, digamos que queremos executar o composer
+
+```
+p composer global require some/package-here
+```
+
+Ou até mesmo executar um único arquivo com PHP:
+```
+p php test.php
+```
+
 ## Contribuição
 
 1. Fork este repositório!
