@@ -4,6 +4,13 @@
 # Date 2018-02-12
 # See the original in https://github.com/codecasts/ambientum/blob/master/installer.sh
 
+################################################################################################################
+#                                                                                                              #
+# To automatically set Codions/Docker-Images on your terminal, please use:                                     #
+# curl -sSL https://raw.githubusercontent.com/codions/docker-images/master/commands/installer.sh | bash        #
+#                                                                                                              #
+################################################################################################################
+
 # mode
 set -e
 
