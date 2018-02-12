@@ -18,11 +18,12 @@ mkdir -p $A_CACHE
 mkdir -p $A_LOCAL
 mkdir -p $A_COMPOSER
 
-# reset permissions
-UNAME_OUTPUT="$(uname -s)"
+# Detect operating system
+OPERATIONAL_SYSTEM="$(uname -s)"
 
-if [ "$UNAME_OUTPUT" == "Darwin" ]; then
-	chown -R $(whoami):admin $A_BASE
+# Reset permissions
+if [ "$OPERATIONAL_SYSTEM" == "Darwin" ]; then
+	chown -R $(whoami):staff $A_BASE
 else
 	chown -R $(whoami):$(whoami) $A_BASE
 fi
