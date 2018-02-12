@@ -27,7 +27,7 @@ Há um conjunto de atalhos que podem ajudar com essa tarefa, mas para isso será
 
 #### Instalação:
 ```
-curl -sSL https://codions.github.io/docker-images/commands/installer.sh | bash
+curl -sSL https://github.com/codions/docker-images/raw/master/commands/installer.sh | bash
 ```
 
 Depois de fazer a instalação dos comandos, seguindo as instruções acima, você poderá usá-los imediatamente.
