@@ -7,7 +7,7 @@
 ################################################################################################################
 #                                                                                                              #
 # To automatically set Codions/Docker-Images on your terminal, please use:                                     #
-# curl -sSL https://raw.githubusercontent.com/codions/docker-images/master/commands/installer.sh | bash        #
+# curl -sSL https://codions.github.io/docker-images/commands/installer.sh | bash                               #
 #                                                                                                              #
 ################################################################################################################
 
@@ -16,6 +16,9 @@ set -e
 
 # Detect user terminal
 USER_SHELL=$(basename $SHELL)
+
+# Detect operating system
+OPERATIONAL_SYSTEM="$(uname -s)"
 
 # If Upgrade is set, do not auto register for auto init
 UPGRADE_ONLY=false
@@ -26,18 +29,24 @@ if [[ $1 == "upgrade" ]]; then
 fi
 
 # define scripts url
-BASH_SCRIPT_URL="https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.bash"
-ZSH_SCRIPT_URL="https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.bash"
-FISH_SCRIPT_URL="https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.fish"
-GITBASH_SCRIPT_URL="https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.git-bash"
+###################################################################################################
+# For manual installation use                                                                     #
+# 1 - curl https://codions.github.io/docker-images/commands/commands.bash -o ~/.codionsdocker_rc  #
+# 2 - source ~/.codionsdocker_rc                                                                  #
+###################################################################################################
+BASH_SCRIPT_URL="https://codions.github.io/docker-images/commands/commands.bash"
+ZSH_SCRIPT_URL="https://codions.github.io/docker-images/commands/commands.bash"
+FISH_SCRIPT_URL="https://codions.github.io/docker-images/commands/commands.fish"
+GITBASH_SCRIPT_URL="https://codions.github.io/docker-images/commands/commands.git-bash"
 
 
 # greet
 function greet() {
-    # Welcome users
-    echo -e "\n\e[32m==========================================\e[39m"
-    echo -e "\e[32m==      Codions/Docker-Images Setup Script :)       ==\e[39m"
-    echo -e "\e[32m==========================================\e[39m\n\n"
+    echo -e "\n"
+    echo -e "=========================================="
+    echo -e "== Codions/Docker-Images Setup Script   =="
+    echo -e "=========================================="
+    echo -e "\n\n"
 }
 
 function setup_fish() {
@@ -119,6 +128,5 @@ case "$USER_SHELL" in
 esac
 
 echo -e "\n\nCodions/Docker-Images is set to automatically be sources at terminal session start.\n"
-echo -e "In case of Codions/Docker-Images commands are not working, please use:\n\n"
+echo -e "In case of Codions/Docker-Images commands are not working, please use:\n"
 echo -e "source ~/.codionsdocker_rc\n\n"
-echo -e "or use manual setup instructions on repository\n\n"
