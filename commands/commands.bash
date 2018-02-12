@@ -18,15 +18,9 @@ mkdir -p $A_CACHE
 mkdir -p $A_LOCAL
 mkdir -p $A_COMPOSER
 
-# Detect operating system
-OPERATIONAL_SYSTEM="$(uname -s)"
-
 # Reset permissions
-if [ "$OPERATIONAL_SYSTEM" == "Darwin" ]; then
-	chown -R $(whoami):staff $A_BASE
-else
-	chown -R $(whoami):$(whoami) $A_BASE
-fi
+chown -R $(whoami) $A_BASE
+# chown -R $(whoami):$(whoami) $A_BASE
 
 # home directory
 A_USER_HOME=/home/codions
