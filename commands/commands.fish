@@ -19,7 +19,13 @@ mkdir -p $A_LOCAL
 mkdir -p $A_COMPOSER
 
 # reset permissions
-chown -R (whoami):(whoami) $A_BASE
+UNAME_OUTPUT="$(uname -s)"
+
+if [ "$UNAME_OUTPUT" == "Darwin" ]; then
+	chown -R $(whoami):admin $A_BASE
+else
+	chown -R $(whoami):$(whoami) $A_BASE
+fi
 
 # home directory
 set A_USER_HOME /home/codions

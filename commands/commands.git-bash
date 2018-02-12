@@ -18,11 +18,6 @@ mkdir -p $A_CACHE
 mkdir -p $A_LOCAL
 mkdir -p $A_COMPOSER
 
-###########################################
-#### DO NOT EDIT BELOW THIS LINE UNLESS   #
-#### YOU KNOW WHAT YOU'RE DOING           #
-###########################################
-
 #reset permissions
 chown -R $(whoami):$(id -g $(whoami)) $A_BASE
 
