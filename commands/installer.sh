@@ -7,7 +7,7 @@
 ################################################################################################################
 #                                                                                                              #
 # To automatically set Codions/Docker-Images on your terminal, please use:                                     #
-# curl -sSL https://github.com/codions/docker-images/raw/master/commands/installer.sh | bash                               #
+# curl -sSL https://raw.githubusercontent.com/codions/docker-images/master/commands/installer.sh | bash                   #                               #
 #                                                                                                              #
 ################################################################################################################
 
@@ -29,15 +29,15 @@ if [[ $1 == "upgrade" ]]; then
 fi
 
 # define scripts url
-###################################################################################################
-# For manual installation use                                                                     #
-# 1 - curl https://github.com/codions/docker-images/raw/master/commands/commands.bash -o ~/.codionsdocker_rc  #
-# 2 - source ~/.codionsdocker_rc                                                                  #
-###################################################################################################
-BASH_SCRIPT_URL="https://github.com/codions/docker-images/raw/master/commands/commands.bash"
-ZSH_SCRIPT_URL="https://github.com/codions/docker-images/raw/master/commands/commands.bash"
-FISH_SCRIPT_URL="https://github.com/codions/docker-images/raw/master/commands/commands.fish"
-GITBASH_SCRIPT_URL="https://github.com/codions/docker-images/raw/master/commands/commands.git-bash"
+#################################################################################################################
+# For manual installation use                                                                                   #
+# 1 - curl https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.bash -o ~/.codionsdocker_rc    #
+# 2 - source ~/.codionsdocker_rc                                                                                #
+#################################################################################################################
+BASH_SCRIPT_URL="https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.bash"
+ZSH_SCRIPT_URL="https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.bash"
+FISH_SCRIPT_URL="https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.fish"
+GITBASH_SCRIPT_URL="https://raw.githubusercontent.com/codions/docker-images/master/commands/commands.git-bash"
 
 
 # greet
