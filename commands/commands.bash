@@ -37,7 +37,7 @@ A_USER_HOME=/home/codions
 
 # Node Env
 function n() {
-	docker run -it --rm -v $(pwd):/var/www/app -v $A_CONFIG:$A_USER_HOME/.config -v $A_CACHE:$A_USER_HOME/.cache -v $A_LOCAL:$A_USER_HOME/.local -v $A_SSH:$A_USER_HOME/.ssh codions/node:9 "$@"
+	docker run -it --rm -v $(pwd):/var/www/app -v $A_CONFIG:$A_USER_HOME/.config -v $A_CACHE:$A_USER_HOME/.cache -v $A_LOCAL:$A_USER_HOME/.local -v $A_SSH:$A_USER_HOME/.ssh codions/nodejs:9 "$@"
 }
 alias n=n
 

@@ -32,7 +32,7 @@ A_PHP_HOME=/home/php-user
 
 # Node Env
 function n() {
-	winpty docker run -it --rm -v /$(pwd):/var/www/app -v /$A_CONFIG:$A_NODE_HOME/.config -v /$A_CACHE:$A_NODE_HOME/.cache -v /$A_LOCAL:$A_NODE_HOME/.local -v /$A_SSH:$A_NODE_HOME/.ssh codions/node:9 "$@"
+	winpty docker run -it --rm -v /$(pwd):/var/www/app -v /$A_CONFIG:$A_NODE_HOME/.config -v /$A_CACHE:$A_NODE_HOME/.cache -v /$A_LOCAL:$A_NODE_HOME/.local -v /$A_SSH:$A_NODE_HOME/.ssh codions/nodejs:9 "$@"
 }
 alias n=n
 
