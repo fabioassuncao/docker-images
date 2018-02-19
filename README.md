@@ -5,17 +5,18 @@ Imagens docker personalizadas para desenvolvimento e produção
 Este projeto possui partes do repositório [codecasts/ambientum](https://github.com/codecasts/ambientum)
 
 ## Imagens disponíveis
-| Repositório         | Imagens/Tags     | Descrição                            | Documentação |
-| ------------------- | ---------------- | ------------------------------------ | :----------: |
-| codions/**php**     | `7.1`, `latest`  | PHP v7.1 para linha de comando       |     WIP      |
-|                     | `7.1-nginx`      | PHP v7.1 com servidor web NGINX      |              |
-|                     | `7.1-apache`     | PHP v7.1 com servidor web Apache     |              |
-| codions/**node**    | `9`, `latest`    | Node.js v9.x                         |              |
-|                     | `8`, `lts`       | Node.js v8.x                         |              |
-| codions/**mysql**   | `5.7`, `latest`  | MySQL Server v5.7 (with sql-mode='') |              |
-|                     | `5.6`            | MySQL Server v5.6                    |              |
-| codions/**mariadb** | `10.3`, `latest` | MariaDB Server v10.3                 |              |
-|                     | `10.2`           | MariaDB Server v10.2                 |              |
+| Repositório             | Imagens/Tags     | Descrição                            | Documentação |
+| ----------------------- | ---------------- | ------------------------------------ | :----------: |
+| codions/**php**         | `7.1`, `latest`  | PHP v7.1 para linha de comando       |     WIP      |
+|                         | `7.1-nginx`      | PHP v7.1 com servidor web NGINX      |              |
+|                         | `7.1-apache`     | PHP v7.1 com servidor web Apache     |              |
+| codions/**node**        | `9`, `latest`    | Node.js v9.x                         |              |
+|                         | `8`, `lts`       | Node.js v8.x                         |              |
+| codions/**mysql**       | `5.7`, `latest`  | MySQL Server v5.7 (with sql-mode='') |              |
+|                         | `5.6`            | MySQL Server v5.6                    |              |
+| codions/**mariadb**     | `10.3`, `latest` | MariaDB Server v10.3                 |              |
+|                         | `10.2`           | MariaDB Server v10.2                 |              |
+| codions/**mailcatcher** | ` latest`        | MailCatcher 0.6.4                    |              |
 
 
 ## Guia de uso rápido dos comandos
