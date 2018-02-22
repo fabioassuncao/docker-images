@@ -1,44 +1,33 @@
 ###
 # codions/docker-images
 #
-# This Dockerfile was modified by Fábio Assunção <fabio23gt@gmail.com>
-# Date 2018-01-23
-# See the original in https://github.com/codecasts/ambientum
-#
 # Repository:    PHP
 # Image:         CLI/Base
 # Version:       7.1.x
 # Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
-# Base distro:   debian:jessie
+# Base distro:   codions/debian:stretch
 #
-FROM debian:jessie
+FROM codions/debian:stretch
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
+
+# Reset user to root to allow software install
+USER root
+
+# Environment variables
+ENV PATH=/home/${USER_NAME}/.composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Variable for enabling XDEBUG
 ENV XDEBUG_ENABLED=false
 
-# Install utility programs
-RUN echo "# Updating Repository" && \
-    apt-get update -y && \
-    dpkg-reconfigure -f noninteractive tzdata && \
-    apt-get upgrade -y && \
-    apt-get install -y apt-transport-https \
-    curl \
-    libxrender1 \
-    libfontconfig1 \
-    libxext6 \
-    wget \
-    nano \
-    vim \
-    sudo
+# Provisioning
+#!/usr/bin/env bash
 
-# Install PHP From DotDeb, Common Extensions
-RUN echo "# Preparing and Installing PHP" && \
-    echo "deb http://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list && \
-    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
-    apt-get update -y && \
-    apt-get -y install \
+RUN echo $'\n\n'"# Preparing and installing PHP"$'\n' && \
+	echo "deb http://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list && \
+	wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+	apt-get update -y  && \
+	apt-get install -y --no-install-recommends \
     php7.1-apcu \
     php7.1-bcmath \
     php7.1-bz2 \
@@ -64,53 +53,37 @@ RUN echo "# Preparing and Installing PHP" && \
     php7.1-zip \
     php7.1-phpdbg
 
-# Install Composer and then cleanup
-RUN echo "# Installing Composer" && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    echo "# Cleaning up" && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+RUN echo $'\n\n'"# Configuring PHP"$'\n' && \
+	sed -i "/user = .*/c\user = ${USER_NAME}" /etc/php/7.1/fpm/pool.d/www.conf && \
+	sed -i "/^group = .*/c\group = ${USER_GROUP}" /etc/php/7.1/fpm/pool.d/www.conf && \
+	sed -i "/listen.owner = .*/c\listen.owner = ${USER_NAME}" /etc/php/7.1/fpm/pool.d/www.conf && \
+	sed -i "/listen.group = .*/c\listen.group = ${USER_GROUP}" /etc/php/7.1/fpm/pool.d/www.conf && \
+	sed -i "/listen = .*/c\listen = [::]:9000" /etc/php/7.1/fpm/pool.d/www.conf && \
+	sed -i "/;access.log = .*/c\access.log = /proc/self/fd/2" /etc/php/7.1/fpm/pool.d/www.conf && \
+	sed -i "/;clear_env = .*/c\clear_env = no" /etc/php/7.1/fpm/pool.d/www.conf && \
+	sed -i "/;catch_workers_output = .*/c\catch_workers_output = yes" /etc/php/7.1/fpm/pool.d/www.conf && \
+	sed -i "/pid = .*/c\;pid = /run/php/php7.1-fpm.pid" /etc/php/7.1/fpm/php-fpm.conf && \
+	sed -i "/;daemonize = .*/c\daemonize = yes" /etc/php/7.1/fpm/php-fpm.conf && \
+	sed -i "/error_log = .*/c\error_log = /proc/self/fd/2" /etc/php/7.1/fpm/php-fpm.conf && \
+	sed -i "/post_max_size = .*/c\post_max_size = 1000M" /etc/php/7.1/fpm/php.ini && \
+	sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 1000M" /etc/php/7.1/fpm/php.ini && \
+	sed -i "/zend_extension=xdebug.so/c\;zend_extension=xdebug.so" /etc/php/7.1/mods-available/xdebug.ini
 
-# Adding the codions
-RUN echo "# Adding the codions" && \
-    adduser --disabled-password --gecos "" codions && \
-    mkdir -p /var/www/app && \
-    chown -R codions:codions /var/www
+RUN echo $'\n\n'"# Installing Composer"$'\n' && \
+	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN echo $'\n\n'"# Cleaning up"$'\n' && \
+	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Add the ENTRYPOINT script
 ADD start.sh /scripts/start.sh
-
-RUN echo "# Configuring PHP" && \
-    echo "codions  ALL = ( ALL ) NOPASSWD: ALL" >> /etc/sudoers && \
-    sed -i "/user = .*/c\user = codions" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/^group = .*/c\group = codions" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/listen.owner = .*/c\listen.owner = codions" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/listen.group = .*/c\listen.group = codions" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/listen = .*/c\listen = [::]:9000" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/;access.log = .*/c\access.log = /proc/self/fd/2" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/;clear_env = .*/c\clear_env = no" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/;catch_workers_output = .*/c\catch_workers_output = yes" /etc/php/7.1/fpm/pool.d/www.conf && \
-    sed -i "/pid = .*/c\;pid = /run/php/php7.1-fpm.pid" /etc/php/7.1/fpm/php-fpm.conf && \
-    sed -i "/;daemonize = .*/c\daemonize = yes" /etc/php/7.1/fpm/php-fpm.conf && \
-    sed -i "/error_log = .*/c\error_log = /proc/self/fd/2" /etc/php/7.1/fpm/php-fpm.conf && \
-    sed -i "/post_max_size = .*/c\post_max_size = 1000M" /etc/php/7.1/fpm/php.ini && \
-    sed -i "/upload_max_filesize = .*/c\upload_max_filesize = 1000M" /etc/php/7.1/fpm/php.ini && \
-    sed -i "/zend_extension=xdebug.so/c\;zend_extension=xdebug.so" /etc/php/7.1/mods-available/xdebug.ini
-
-RUN chmod +x /scripts/start.sh && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
-
-# Dumb Init
-ADD https://github.com/krallin/tini/releases/download/v0.10.0/tini /tini
-RUN chmod +x /tini
+RUN chmod +x /scripts/start.sh
 
 # Define the running user
-USER codions
+USER $USER_NAME
 
 # Application directory
-WORKDIR "/var/www/app"
-
-ENV PATH=/home/codions/.composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+WORKDIR $WORKDIR
 
 # Define the entry point
 ENTRYPOINT ["/tini", "--", "/scripts/start.sh"]
