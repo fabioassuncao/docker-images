@@ -18,7 +18,7 @@ REPOSITORIES=$1
 
 # enable all repositories if any specified
 if [[ -z $REPOSITORIES ]]; then
-    REPOSITORIES="mailcatcher mariadb mysql nodejs php postgres redis"
+    REPOSITORIES=$ALL_REPOSITORIES
 fi
 
 # for returning later to the main directory
@@ -41,7 +41,7 @@ function build_repository {
       fi
 
       if [ $USE_CACHE == false ]; then
-        docker build --no-cache -t $NAMESPACE/$REPOSITORY:$TAG .
+        docker build --no-cache=true -t $NAMESPACE/$REPOSITORY:$TAG .
       fi
     done
 

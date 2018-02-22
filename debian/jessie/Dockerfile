@@ -1,21 +1,16 @@
 ###
 # codions/docker-images
 #
-# Repository:    PHP
-# Image:         CLI/Base
-# Version:       7.1.x
-# Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
-# Base distro:   codions/debian:jessie
-#
-FROM codions/debian:jessie
+FROM debian:jessie
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
-# Reset user to root to allow software install
-USER root
-
-# Variable for enabling XDEBUG
-ENV XDEBUG_ENABLED=false
+# Environment variables
+ENV USER_NAME=codions
+ENV USER_GROUP=codions
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LOCALE=en_US
+ENV WORKDIR=/var/www/app
 
 # Provisioning
 ADD setup.sh /scripts/setup.sh
@@ -25,13 +20,17 @@ RUN chmod +x /scripts/setup.sh && /scripts/setup.sh
 ADD start.sh /scripts/start.sh
 RUN chmod +x /scripts/start.sh
 
+# Dumb Init
+ADD https://github.com/krallin/tini/releases/download/v0.10.0/tini /tini
+RUN chmod +x /tini
+
 # Define the running user
 USER $USER_NAME
 
 # Application directory
 WORKDIR $WORKDIR
 
-ENV PATH=/home/${USER_NAME}/.composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Define the entry point
 ENTRYPOINT ["/tini", "--", "/scripts/start.sh"]
