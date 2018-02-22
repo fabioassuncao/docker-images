@@ -9,6 +9,9 @@ FROM codions/debian:stretch
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
+# Reset user to root to allow software install
+USER root
+
 # Provisioning
 RUN apt-get update -y && \
 	echo $'\n\n'"# Installing mailcatcher"$'\n' && \

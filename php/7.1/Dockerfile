@@ -28,6 +28,10 @@ RUN echo $'\n\n'"# Preparing and installing PHP"$'\n' && \
 	wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
 	apt-get update -y  && \
 	apt-get install -y --no-install-recommends \
+    libxrender1 \
+    libfontconfig1 \
+    libxext6 \
+    php7.1 \
     php7.1-apcu \
     php7.1-bcmath \
     php7.1-bz2 \
