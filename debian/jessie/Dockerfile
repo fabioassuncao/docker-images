@@ -19,7 +19,7 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # Provisioning
 RUN apt-get update -y && \
     echo $'\n\n'"# Installing utility programs"$'\n' && \
-    apt-get install -y --no-install-recommends \
+    apt-get install --quiet --yes --force-yes --no-install-recommends \
     software-properties-common \
     apt-transport-https \
     apt-utils \
@@ -72,4 +72,4 @@ WORKDIR $WORKDIR
 ENTRYPOINT ["/tini", "--", "/scripts/start.sh"]
 
 # As non daemon and single base image, it may be used as cli container
-CMD ["/bin/bash"]
+CMD /bin/bash

@@ -10,4 +10,4 @@ MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 EXPOSE 6379
 
 # Main command
-CMD ["redis-server"]
+CMD redis-server

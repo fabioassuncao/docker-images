@@ -31,13 +31,12 @@ RUN echo $'\n\n'"# Fixing permissions"$'\n' && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Add the ENTRYPOINT script
-ADD start.sh /scripts/start.sh
-RUN chmod +x /scripts/start.sh && \
-    chown -R ${USER_NAME}:${USER_GROUP} /scripts
+ADD start.sh /home/${USER_NAME}/start.sh
+RUN chmod +x /home/${USER_NAME}/start.sh && \
+    chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}
 
 # Copy nginx and entry script
 COPY configs/nginx.conf /etc/nginx/nginx.conf
-COPY start.sh  /home/codions/start.sh
 COPY app ${WORKDIR}/public
 
 # Define the running user
@@ -49,5 +48,5 @@ WORKDIR $WORKDIR
 # Expose webserver port
 EXPOSE 8080
 
-# Starts a single shell script that puts php-fpm as a daemon and apache2 on foreground
-CMD ["/scripts/start.sh"]
+# As non daemon and single base image, it may be used as cli container
+CMD /home/${USER_NAME}/start.sh

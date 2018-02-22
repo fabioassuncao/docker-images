@@ -15,7 +15,7 @@ USER root
 # Provisioning
 RUN apt-get update -y && \
 	echo $'\n\n'"# Installing mailcatcher"$'\n' && \
-	apt-get install -y --no-install-recommends \
+	apt-get install --quiet --yes --force-yes --no-install-recommends \
     libsqlite3-dev \
     ruby \
     ruby-dev \

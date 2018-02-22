@@ -14,13 +14,16 @@ MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 # Reset user to root to allow software install
 USER root
 
+ENV APACHE_CONFDIR=/etc/apache2
+ENV APACHE_ENVVARS=$APACHE_CONFDIR/envvars
+
 # Provisioning
 # Install apache2 from official repositories
 RUN echo $'\n\n'"# Adding contrib and non-free components in source.list"$'\n' && \
 	sed -i "/main/s//main contrib non-free/" /etc/apt/sources.list && \
 	echo -e  "# Updating Repository and Installing Apache2" && \
 	apt-get update -y && \
-	apt-get install -y --no-install-recommends \
+	apt-get install --quiet --yes --force-yes --no-install-recommends \
     apache2 \
     apache2-mpm-worker \
     libapache2-mod-fastcgi
@@ -42,9 +45,9 @@ RUN echo $'\n\n'"# Fixing permissions"$'\n' && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Add the ENTRYPOINT script
-ADD start.sh /scripts/start.sh
-RUN chmod +x /scripts/start.sh && \
-    chown -R ${USER_NAME}:${USER_GROUP} /scripts
+ADD start.sh /home/${USER_NAME}/start.sh
+RUN chmod +x /home/${USER_NAME}/start.sh && \
+    chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}
 
 # Copy apache, fastcgi and entry script
 COPY configs/vhost.conf /etc/apache2/sites-available/000-default.conf
@@ -61,5 +64,5 @@ WORKDIR $WORKDIR
 # Expose webserver port
 EXPOSE 8080
 
-# Starts a single shell script that puts php-fpm as a daemon and apache2 on foreground
-CMD ["/scripts/start.sh"]
+# As non daemon and single base image, it may be used as cli container
+CMD /home/${USER_NAME}/start.sh

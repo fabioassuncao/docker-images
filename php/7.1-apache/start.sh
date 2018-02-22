@@ -15,4 +15,4 @@ rm -f "$APACHE_PID_FILE"
 nohup /usr/sbin/php-fpm7.1 -F -O 2>&1 &
 
 # Starts apache2!
-exec apache2 -DFOREGROUND "$@"
+exec apache2 -D FOREGROUND "$@"

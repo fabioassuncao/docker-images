@@ -27,7 +27,7 @@ RUN echo $'\n\n'"# Preparing and installing PHP"$'\n' && \
 	echo "deb http://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list && \
 	wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
 	apt-get update -y  && \
-	apt-get install -y --no-install-recommends \
+	apt-get install --quiet --yes --force-yes --no-install-recommends \
     libmagickcore-dev \
     libmagickwand-dev \
     libpng12-dev \
@@ -95,4 +95,4 @@ WORKDIR $WORKDIR
 ENTRYPOINT ["/tini", "--", "/scripts/start.sh"]
 
 # As non daemon and single base image, it may be used as cli container
-CMD ["/bin/bash"]
+CMD /bin/bash

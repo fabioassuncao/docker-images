@@ -49,4 +49,4 @@ WORKDIR $WORKDIR
 ENTRYPOINT ["/tini", "--", "/scripts/start.sh"]
 
 # As non daemon and single base image, it may be used as cli container
-CMD ["/bin/bash"]
+CMD /bin/bash
