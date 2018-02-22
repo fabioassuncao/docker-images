@@ -26,15 +26,13 @@ RUN echo $'\n\n'"# Adding contrib and non-free components in source.list"$'\n' &
 	apt-get install --quiet --yes --force-yes --no-install-recommends \
     apache2 \
     apache2-mpm-worker \
-    libapache2-mod-fastcgi
-
-RUN echo $'\n\n'"# Disabling mods we don't need, and enabling those who need"$'\n' && \
+    libapache2-mod-fastcgi && \
+    echo $'\n\n'"# Disabling mods we don't need, and enabling those who need"$'\n' && \
 	a2dismod mpm_prefork mpm_event && \
 	a2enmod actions fastcgi alias mpm_worker rewrite && \
 	echo $'\n\n'"# Creating php7-fcgi"$'\n' && \
-	touch /var/lib/apache2/fastcgi/php7-fcgi
-
-RUN echo $'\n\n'"# Fixing permissions"$'\n' && \
+	touch /var/lib/apache2/fastcgi/php7-fcgi && \
+	echo $'\n\n'"# Fixing permissions"$'\n' && \
 	chown -R ${USER_NAME}:${USER_GROUP} /etc/apache2 && \
 	chown -R ${USER_NAME}:${USER_GROUP} /var/run/apache2 && \
 	chown -R ${USER_NAME}:${USER_GROUP} /var/log/apache2 && \

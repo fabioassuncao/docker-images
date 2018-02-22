@@ -9,12 +9,12 @@ MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 USER root
 
 # Environment variables
-ENV USER_NAME=codions
-ENV USER_GROUP=codions
-ENV DEBIAN_FRONTEND=noninteractive
-ENV LOCALE=en_US
-ENV WORKDIR=/var/www/app
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV USER_NAME=codions \
+    USER_GROUP=codions \
+    DEBIAN_FRONTEND=noninteractive \
+    LOCALE=en_US \
+    WORKDIR=/var/www/app \
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Provisioning
 RUN apt-get update -y && \
@@ -38,20 +38,16 @@ RUN apt-get update -y && \
     wget \
     git \
     nano \
-    curl
-
-# Adding the user
-RUN echo $'\n\n'"# Creating a new user: ${USER_NAME}"$'\n' && \
+    curl && \
+    echo $'\n\n'"# Creating a new user: ${USER_NAME}"$'\n' && \
     adduser --disabled-password --gecos "" ${USER_NAME} && \
     usermod -aG sudo ${USER_NAME} && \
     usermod -aG www-data ${USER_NAME} && \
-    echo "${USER_NAME}  ALL = ( ALL ) NOPASSWD: ALL" >> /etc/sudoers
-
-RUN echo $'\n\n'"# Preparing working directory"$'\n' && \
+    echo "${USER_NAME}  ALL = ( ALL ) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo $'\n\n'"# Preparing working directory"$'\n' && \
     mkdir -p ${WORKDIR}  && \
-    chown -R ${USER_NAME}:${USER_GROUP} ${WORKDIR}
-
-RUN echo $'\n\n'"# Cleaning up"$'\n' && \
+    chown -R ${USER_NAME}:${USER_GROUP} ${WORKDIR} && \
+    echo $'\n\n'"# Cleaning up"$'\n' && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Add the ENTRYPOINT script

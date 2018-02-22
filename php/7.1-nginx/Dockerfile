@@ -19,10 +19,8 @@ USER root
 RUN echo $'\n\n'"# Updating Repository and Installing Nginx"$'\n' && \
 	apt-get update -y && \
 	apt-get install -y nginx && \
+	mkdir /var/run/nginx && \
 	echo $'\n\n'"# Fixing permissions"$'\n' && \
-	mkdir /var/run/nginx
-
-RUN echo $'\n\n'"# Fixing permissions"$'\n' && \
 	chown -R ${USER_NAME}:${USER_GROUP} /var/run/nginx && \
 	chown -R ${USER_NAME}:${USER_GROUP} /var/log/nginx && \
 	chown -R ${USER_NAME}:${USER_GROUP} /var/lib/nginx && \

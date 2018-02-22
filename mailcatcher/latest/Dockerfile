@@ -20,9 +20,8 @@ RUN apt-get update -y && \
     ruby \
     ruby-dev \
     build-essential && \
-    gem install --no-ri --no-rdoc mailcatcher
-
-RUN echo $'\n\n'"# Cleaning up"$'\n' && \
+    gem install --no-ri --no-rdoc mailcatcher && \
+    echo $'\n\n'"# Cleaning up"$'\n' && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* && \
 	apt-get remove -y build-essential && \
 	apt-get autoremove -y && \

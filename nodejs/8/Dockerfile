@@ -15,13 +15,13 @@ MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 USER root
 
 # Environment variables
-ENV NPM_PACKAGES="/home/${USER_NAME}/.cache/npm-packages"
-ENV NODE_PATH="/home/${USER_NAME}/.cache/npm-packages/lib/node_modules"
-ENV MANPATH="/home/${USER_NAME}/.cache/npm-packages/share/man:/usr/share/man"
-ENV PREFIX='/home/${USER_NAME}/.local'
-ENV PATH="/home/${USER_NAME}/.local/bin:/home/${USER_NAME}/.cache/npm-packages/bin:/home/${USER_NAME}/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-ENV TERM=xterm-256color
-ENV COLORTERM=truecolor
+ENV NPM_PACKAGES="/home/${USER_NAME}/.cache/npm-packages" \
+	NODE_PATH="/home/${USER_NAME}/.cache/npm-packages/lib/node_modules" \
+	MANPATH="/home/${USER_NAME}/.cache/npm-packages/share/man:/usr/share/man" \
+	PREFIX='/home/${USER_NAME}/.local' \
+	PATH="/home/${USER_NAME}/.local/bin:/home/${USER_NAME}/.cache/npm-packages/bin:/home/${USER_NAME}/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+	TERM=xterm-256color \
+	COLORTERM=truecolor
 
 # Provisioning
 RUN echo $'\n\n'"# Preparing and installing NodeJS, Grunt, Gulp, Bower and Yarn"$'\n' && \
