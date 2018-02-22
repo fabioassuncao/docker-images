@@ -15,8 +15,31 @@ MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 USER root
 
 # Provisioning
-ADD setup.sh /scripts/setup.sh
-RUN chmod +x /scripts/setup.sh && /scripts/setup.sh
+# Install apache2 from official repositories
+RUN echo $'\n\n'"# Adding contrib and non-free components in source.list"$'\n' && \
+	sed -i "/main/s//main contrib non-free/" /etc/apt/sources.list && \
+	echo -e  "# Updating Repository and Installing Apache2" && \
+	apt-get update -y && \
+	apt-get install -y --no-install-recommends \
+    apache2 \
+    apache2-mpm-worker \
+    libapache2-mod-fastcgi
+
+RUN echo $'\n\n'"# Disabling mods we don't need, and enabling those who need"$'\n' && \
+	a2dismod mpm_prefork mpm_event && \
+	a2enmod actions fastcgi alias mpm_worker rewrite && \
+	echo $'\n\n'"# Creating php7-fcgi"$'\n' && \
+	touch /var/lib/apache2/fastcgi/php7-fcgi
+
+RUN echo $'\n\n'"# Fixing permissions"$'\n' && \
+	chown -R ${USER_NAME}:${USER_GROUP} /etc/apache2 && \
+	chown -R ${USER_NAME}:${USER_GROUP} /var/run/apache2 && \
+	chown -R ${USER_NAME}:${USER_GROUP} /var/log/apache2 && \
+	chown -R ${USER_NAME}:${USER_GROUP} /var/lock/apache2 && \
+	chown -R ${USER_NAME}:${USER_GROUP} /var/lib/apache2 && \
+	echo $'\n\n'"# Cleaning up"$'\n' && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Add the ENTRYPOINT script
 ADD start.sh /scripts/start.sh

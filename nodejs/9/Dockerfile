@@ -1,70 +1,52 @@
 ###
 # codions/docker-images
 #
-# This Dockerfile was modified by Fábio Assunção <fabio23gt@gmail.com>
-# Date 2018-01-23
-# See the original in https://github.com/codecasts/ambientum
-#
 # Repository:    Node.JS
 # Image:         CLI/Base
 # Version:       9.x.x
-# Strategy:      Based on mhart/alpine-node
-# Base distro:   Alpine 3.7
+# Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
+# Base distro:   codions/debian:jessie
 #
-FROM mhart/alpine-node:9
+FROM codions/debian:jessie
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
-# Variables for enabling NewRelic
-ENV NPM_PACKAGES="/home/codions/.cache/npm-packages" \
-    NODE_PATH="/home/codions/.cache/npm-packages/lib/node_modules" \
-    MANPATH="/home/codions/.cache/npm-packages/share/man:/usr/share/man" \
-    PREFIX='/home/codions/.local' \
-    PATH="/home/codions/.local/bin:/home/codions/.cache/npm-packages/bin:/home/codions/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
-    TERM=xterm-256color \
-    COLORTERM=truecolor
+# Reset user to root to allow software install
+USER root
 
-# Install PHP From DotDeb, Common Extensions, Composer and then cleanup
-RUN echo "# Installing base dependencies" && \
-    apk add --update \
-    wget \
-    curl \
-    bash \
-    fontconfig \
-    libxrender \
-    libxext \
-    nano \
-    vim \
-    git \
-    unzip \
-    wget \
-    make \
-    sudo
+# Environment variables
+ENV NPM_PACKAGES="/home/${USER_NAME}/.cache/npm-packages"
+ENV NODE_PATH="/home/${USER_NAME}/.cache/npm-packages/lib/node_modules"
+ENV MANPATH="/home/${USER_NAME}/.cache/npm-packages/share/man:/usr/share/man"
+ENV PREFIX='/home/${USER_NAME}/.local'
+ENV PATH="/home/${USER_NAME}/.local/bin:/home/${USER_NAME}/.cache/npm-packages/bin:/home/${USER_NAME}/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ENV TERM=xterm-256color
+ENV COLORTERM=truecolor
 
-RUN echo "# Cleaning up" && \
-    rm -rf /tmp/*
-
-RUN echo "# Adding the codions user" && \
-    adduser -D -u 1000 codions && \
-    mkdir -p /var/www/app && \
-    chown -R codions:codions /var/www && \
-    wget -O /tini https://github.com/krallin/tini/releases/download/v0.16.1/tini-static && \
-    chmod +x /tini && \
-    chown -R codions:codions /home/codions && \
-    rm -rf /tmp/*
-
-# Define the running user
-USER codions
+# Provisioning
+RUN echo $'\n\n'"# Preparing and installing NodeJS, Grunt, Gulp, Bower and Yarn"$'\n' && \
+	curl --silent --location https://deb.nodesource.com/setup_9.x | bash -  && \
+	apt-get install -y nodejs  && \
+	/usr/bin/npm install -g grunt-cli && \
+	/usr/bin/npm install -g gulp && \
+	/usr/bin/npm install -g bower && \
+	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
+	apt-get update -y && \
+	apt-get install -y --no-install-recommends yarn
 
 # Add the ENTRYPOINT script
-ADD bashrc /home/codions/.bashrc
+ADD start.sh /scripts/start.sh
+RUN chmod +x /scripts/start.sh
 
+# Define the running user
+USER $USER_NAME
 
 # Application directory
-WORKDIR "/var/www/app"
+WORKDIR $WORKDIR
 
-# Define the entry point that tries to enable newrelic
-ENTRYPOINT ["/tini", "--"]
+# Define the entry point
+ENTRYPOINT ["/tini", "--", "/scripts/start.sh"]
 
 # As non daemon and single base image, it may be used as cli container
 CMD ["/bin/bash"]

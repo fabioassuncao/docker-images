@@ -9,17 +9,21 @@ FROM codions/debian:jessie
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
+# Provisioning
 RUN apt-get update -y && \
-    apt-get install -q -y \
+	echo $'\n\n'"# Installing mailcatcher"$'\n' && \
+	apt-get install -y --no-install-recommends \
     libsqlite3-dev \
     ruby \
     ruby-dev \
     build-essential && \
-    gem install --no-ri --no-rdoc mailcatcher && \
-    apt-get remove -y build-essential && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    gem install --no-ri --no-rdoc mailcatcher
+
+RUN echo $'\n\n'"# Cleaning up"$'\n' && \
+	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* && \
+	apt-get remove -y build-essential && \
+	apt-get autoremove -y && \
+	apt-get clean
 
 EXPOSE 1080 1025
 

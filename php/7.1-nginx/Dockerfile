@@ -15,8 +15,20 @@ MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 USER root
 
 # Provisioning
-ADD setup.sh /scripts/setup.sh
-RUN chmod +x /scripts/setup.sh && /scripts/setup.sh
+# Install nginx from dotdeb (already enabled on base image)
+RUN echo $'\n\n'"# Updating Repository and Installing Nginx"$'\n' && \
+	apt-get update -y && \
+	apt-get install -y nginx && \
+	echo $'\n\n'"# Fixing permissions"$'\n' && \
+	mkdir /var/run/nginx
+
+RUN echo $'\n\n'"# Fixing permissions"$'\n' && \
+	chown -R ${USER_NAME}:${USER_GROUP} /var/run/nginx && \
+	chown -R ${USER_NAME}:${USER_GROUP} /var/log/nginx && \
+	chown -R ${USER_NAME}:${USER_GROUP} /var/lib/nginx && \
+	echo $'\n\n'"# Cleaning up"$'\n' && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Add the ENTRYPOINT script
 ADD start.sh /scripts/start.sh
