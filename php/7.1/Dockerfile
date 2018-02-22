@@ -5,9 +5,9 @@
 # Image:         CLI/Base
 # Version:       7.1.x
 # Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
-# Base distro:   codions/debian:jessie
+# Base distro:   codions/debian:stretch
 #
-FROM codions/debian:jessie
+FROM codions/debian:stretch
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 

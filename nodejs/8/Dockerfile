@@ -3,7 +3,7 @@
 #
 # Repository:    Node.JS
 # Image:         CLI/Base
-# Version:       9.x.x
+# Version:       8.x.x
 # Strategy:      Debian Jessie as Base Image (Dotdeb PHP builds)
 # Base distro:   codions/debian:stretch
 #
@@ -25,7 +25,7 @@ ENV COLORTERM=truecolor
 
 # Provisioning
 RUN echo $'\n\n'"# Preparing and installing NodeJS, Grunt, Gulp, Bower and Yarn"$'\n' && \
-	curl --silent --location https://deb.nodesource.com/setup_9.x | bash -  && \
+	curl --silent --location https://deb.nodesource.com/setup_8.x | bash -  && \
 	apt-get install -y nodejs  && \
 	/usr/bin/npm install -g grunt-cli && \
 	/usr/bin/npm install -g gulp && \

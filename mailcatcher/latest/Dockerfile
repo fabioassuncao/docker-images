@@ -5,7 +5,7 @@
 # Version:       0.6
 # Base distro:   debian:jessie
 #
-FROM codions/debian:jessie
+FROM codions/debian:stretch
 
 MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 
