@@ -9,6 +9,7 @@ Este projeto possui partes do repositório [codecasts/ambientum](https://github.
 | ----------------------- | ------------------- | ------------------------------------ |
 | codions/**debian**      | `stretch`, `latest` | Debian 9 Stretch                     |
 |                         | `jessie`            | Debian 8 Jessie                      |
+| codions/**ubuntu**      | `16.04`, `latest`   | Ubuntu 16.04 LTS                     |
 | codions/**php**         | `7.1`, `latest`     | PHP v7.1 para linha de comando       |
 |                         | `7.1-nginx`         | PHP v7.1 com servidor web NGINX      |
 |                         | `7.1-apache`        | PHP v7.1 com servidor web Apache     |
