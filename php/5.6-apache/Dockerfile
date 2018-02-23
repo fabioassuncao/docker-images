@@ -60,5 +60,4 @@ WORKDIR $WORKDIR
 EXPOSE 8080
 
 # As non daemon and single base image, it may be used as cli container
-# CMD /home/${USER_NAME}/start.sh
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+CMD /home/${USER_NAME}/start.sh
