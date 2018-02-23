@@ -14,8 +14,8 @@ MAINTAINER Fábio Assunção <fabio23gt@gmail.com>
 # Reset user to root to allow software install
 USER root
 
-ENV APACHE_CONFDIR=/etc/apache2
-ENV APACHE_ENVVARS=$APACHE_CONFDIR/envvars
+ENV APACHE_CONFDIR=/etc/apache2 \
+    APACHE_ENVVARS=/etc/apache2/envvars
 
 # Provisioning
 # Install apache2 from official repositories
