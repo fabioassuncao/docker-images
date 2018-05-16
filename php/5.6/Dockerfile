@@ -17,6 +17,8 @@ USER root
 # Environment variables
 ENV PATH=/home/${USER_NAME}/.composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Provisioning
 RUN echo $'\n\n'"# Preparing and installing PHP"$'\n' && \
     LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php && \
