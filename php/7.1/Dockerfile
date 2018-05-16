@@ -20,6 +20,8 @@ ENV PATH=/home/${USER_NAME}/.composer/vendor/bin:/usr/local/sbin:/usr/local/bin:
 # Variable for enabling XDEBUG
 ENV XDEBUG_ENABLED=false
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Provisioning
 RUN echo $'\n\n'"# Preparing and installing PHP"$'\n' && \
 	echo "deb http://packages.sury.org/php/ jessie main" > /etc/apt/sources.list.d/php.list && \
