@@ -6,34 +6,12 @@ ENV APP_ENV=production \
     APP_PATH=/usr/share/nginx/html \
     APP_STORAGE=/usr/share/nginx/html/storage \
     APP_SCRIPTS=/usr/deploy/scripts \
-    COMPOSER_ALLOW_SUPERUSER=1 \
-    COMPOSER_MEMORY_LIMIT='-1' \
     ENABLE_SCHEDULE=false \
     ENABLE_WORKER=false \
     ENABLE_HORIZON=false \
-    ENABLE_WEBSOCKETS=false \
-    ENABLE_SUPERVISOR_GUI=false \
-    SUPERVISORD_USER=admin \
-    SUPERVISORD_PASS=secret \
-    # Colored output
-    COL_RESET="\x1b[39;49;00m" \
-    COL_LYELLOW="\x1b[33;01m" \
-    COL_LGREEN="\x1b[32;01m" \
-    COL_CYAN="\x1b[0;36m" \
-    COL_GREEN="\x1b[0;32m" \
-    COL_MAGENTA="\x1b[0;35m"
+    ENABLE_WEBSOCKETS=false
 
 WORKDIR $APP_PATH
-
-RUN apt-get update && apt-get install -y \
-    openssh-client \
-    rsync \
-    git \
-    # Clean up
-    && rm -rf /tmp/pear \
-    && apt-get clean \
-    && apt-get autoremove \
-    && rm -rf /var/lib/apt/lists/*
 
 # Supervisor config
 COPY deploy/supervisor.d/* /etc/supervisor.d/

@@ -3,13 +3,25 @@ FROM debian:buster
 LABEL maintainer="Fábio Assunção fabio@codions.com"
 
 # Let the container know that there is no tty
-ENV DEBIAN_FRONTEND noninteractive
-ENV NGINX_VERSION 1.19.5-1~buster
-ENV php_conf /etc/php/7.4/fpm/php.ini
-ENV fpm_conf /etc/php/7.4/fpm/pool.d/www.conf
-
-ENV SUPERVISORD_USER=admin \
-    SUPERVISORD_PASS=secret
+ENV DEBIAN_FRONTEND noninteractive \
+    NGINX_VERSION 1.19.5-1~buster \
+    php_conf /etc/php/7.4/fpm/php.ini \
+    fpm_conf /etc/php/7.4/fpm/pool.d/www.conf \
+    ENABLE_SUPERVISOR_GUI=false \
+    ENABLE_NGINX=true \
+    ENABLE_PHPFPM=true \
+    SUPERVISORD_USER=admin \
+    SUPERVISORD_PASS=secret \
+    # Adjustments Composer
+    COMPOSER_ALLOW_SUPERUSER=1 \
+    COMPOSER_MEMORY_LIMIT='-1' \
+    # Colored output
+    COL_RESET="\x1b[39;49;00m" \
+    COL_LYELLOW="\x1b[33;01m" \
+    COL_LGREEN="\x1b[32;01m" \
+    COL_CYAN="\x1b[0;36m" \
+    COL_GREEN="\x1b[0;32m" \
+    COL_MAGENTA="\x1b[0;35m"
 
 # Install Basic Requirements
 RUN buildDeps='curl gcc make autoconf libc-dev zlib1g-dev pkg-config' \
