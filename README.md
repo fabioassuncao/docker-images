@@ -1,4 +1,7 @@
 # Codions Docker
+
+![Docker Build/Publish CI](https://github.com/codions/docker-images/workflows/Docker%20Build/Publish%20CI/badge.svg)
+
 Docker images for development and production
 
 ## Available images
