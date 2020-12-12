@@ -1,11 +1,10 @@
 # Codions Docker
-Imagens docker personalizadas para desenvolvimento
+Docker images for development and production
 
-## Imagens disponíveis
-| Repositório             | Imagens/Tags           | Descrição                                 |
+## Available images
+| Repository              | Image/Tag              | Description                               |
 | ----------------------- | ---------------------- | ----------------------------------------- |
 | codions/**php**         | `7.4-nginx`, `latest`  | PHP FPM 7.4 + nginx                       |
 
-## Licença
-
-Licenciado sob a licença MIT.
+## License
+Licensed under the MIT license.
