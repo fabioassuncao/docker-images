@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# This script was modified by Fábio Assunção <fabio23gt@gmail.com>
-# Date 2018-01-22
-# See the original in https://github.com/codecasts/ambientum/blob/master/build.sh
-
 # if there is a env file, source it
 if [ -f "./.env" ]; then
    source ./.env
