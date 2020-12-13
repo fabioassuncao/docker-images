@@ -5,10 +5,10 @@
 Docker images for development and production
 
 ## Available images
-| Repository              | Image/Tag              | Description                               |
-| ----------------------- | ---------------------- | ----------------------------------------- |
-| codions/php             | `7.4-nginx`, `latest`  | PHP FPM 7.4, NGINX, Supervisor            |
-| codions/laravel         | `8.x`, `latest`        | Laravel 8.x, Schedule, Worker, WebSockets |
+| Repository              | Image/Tag              | Description                               | Pulls |
+| ----------------------- | ---------------------- | ----------------------------------------- | ----- |
+| codions/php             | `7.4-nginx`, `latest`  | PHP FPM 7.4, NGINX, Supervisor            | ![Docker Pulls](https://img.shields.io/docker/pulls/codions/php) |
+| codions/laravel         | `8.x`, `latest`        | Laravel 8.x, Schedule, Worker, WebSockets | ![Docker Pulls](https://img.shields.io/docker/pulls/codions/laravel) |
 
 ## License
 Licensed under the MIT license.
