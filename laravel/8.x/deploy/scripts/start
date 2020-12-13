@@ -73,11 +73,11 @@ if [ "$ENABLE_NGINX" = "true" ] ; then
     printf "${COL_GREEN} -----> Info:${COL_RESET} Starting NGINX service...\n"
     cp -f $NGINX_CONF.default $NGINX_CONF
 
-    # Update nginx to match worker_processes to no. of cpu's
+    printf "${COL_GREEN} -----> Info:${COL_RESET} Updating nginx to match worker_processes to no. of cpu's...\n"
     procs=$(cat /proc/cpuinfo | grep processor | wc -l)
     sed -i -e "s/worker_processes  1/worker_processes $procs/" /etc/nginx/nginx.conf
 
-    # Always chown webroot for better mounting
+    printf "${COL_GREEN} -----> Info:${COL_RESET} Changing the owner of the /usr/share/nginx/html folder to nginx.nginx...\n"
     chown -Rf nginx.nginx /usr/share/nginx/html
 
 else
