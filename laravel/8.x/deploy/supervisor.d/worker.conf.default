@@ -1,4 +1,4 @@
-[program:horizon]
+[program:worker]
 command=php %(ENV_APP_PATH)s/artisan queue:work --sleep=3 --tries=3 --daemon
 autorestart=true
 stdout_events_enabled=true
