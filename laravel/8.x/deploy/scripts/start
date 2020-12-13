@@ -77,9 +77,6 @@ if [ "$ENABLE_NGINX" = "true" ] ; then
     procs=$(cat /proc/cpuinfo | grep processor | wc -l)
     sed -i -e "s/worker_processes  1/worker_processes $procs/" /etc/nginx/nginx.conf
 
-    printf "${COL_GREEN} -----> Info:${COL_RESET} Changing the owner of the /usr/share/nginx/html folder to nginx.nginx...\n"
-    chown -Rf nginx.nginx /usr/share/nginx/html
-
 else
     rm -f $NGINX_CONF
 fi
