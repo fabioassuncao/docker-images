@@ -1,5 +1,6 @@
 [program:horizon]
 command=php %(ENV_APP_PATH)s/artisan horizon
+autostart=true
 autorestart=true
 stdout_events_enabled=true
 stderr_events_enabled=true
