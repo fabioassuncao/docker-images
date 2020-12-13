@@ -2,10 +2,6 @@
 
 set -e
 
-SUPERVISOR_GUI_CONF=/etc/supervisor.d/supervisord-gui.conf
-NGINX_CONF=/etc/supervisor.d/nginx.conf
-PHPFPM_CONF=/etc/supervisor.d/php-fpm7.conf
-
 # Enable Supervisor GUI
 if [ "$ENABLE_SUPERVISOR_GUI" = "true" ] ; then
     printf "${COL_GREEN} -----> Info:${COL_RESET} Starting Supervisor GUI service...\n"
@@ -40,4 +36,5 @@ else
 fi
 
 # Start supervisord and services
+printf "${COL_GREEN} -----> Info:${COL_RESET} Launching supervisord...\n"
 /usr/local/bin/supervisord -n -c /etc/supervisord.conf

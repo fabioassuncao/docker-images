@@ -9,7 +9,11 @@ ENV APP_ENV=production \
     ENABLE_SCHEDULE=false \
     ENABLE_WORKER=false \
     ENABLE_HORIZON=false \
-    ENABLE_WEBSOCKETS=false
+    ENABLE_WEBSOCKETS=false \
+    SCHEDULE_CONF=/etc/supervisor.d/cron.conf \
+    WORKER_CONF=/etc/supervisor.d/worker.conf \
+    HORIZON_CONF=/etc/supervisor.d/horizon.conf \
+    WEBSOCKETS_CONF=/etc/supervisor.d/websockets.conf
 
 WORKDIR $APP_PATH
 
