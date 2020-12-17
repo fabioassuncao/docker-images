@@ -77,6 +77,16 @@ if [ "$ENABLE_NGINX" = "true" ] ; then
     procs=$(cat /proc/cpuinfo | grep processor | wc -l)
     sed -i -e "s/worker_processes  1/worker_processes $procs/" /etc/nginx/nginx.conf
 
+    if [ -d "$APP_PATH/storage" ] ; then
+        printf "${COL_GREEN} -----> Info:${COL_RESET} Fixing permissions on the storage directory...\n"
+        chown -Rf nginx.nginx storage
+    fi
+
+    if [ -d "$APP_PATH/bootstrap/cache" ] ; then
+        printf "${COL_GREEN} -----> Info:${COL_RESET} Fixing permissions on the bootstrap/cache directory...\n"
+        chown -Rf nginx.nginx bootstrap/cache
+    fi
+
 else
     rm -f $NGINX_CONF
 fi
