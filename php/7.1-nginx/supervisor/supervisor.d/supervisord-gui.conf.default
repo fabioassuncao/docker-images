@@ -1,0 +1,4 @@
+[inet_http_server] ; inet (TCP) server disabled by default
+port=*:9001 ; (ip_address:port specifier, *:port for all iface)
+username=%(ENV_SUPERVISORD_USER)s
+password=%(ENV_SUPERVISORD_PASS)s
