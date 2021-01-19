@@ -14,42 +14,44 @@ if [ -d "$APP_PATH/vendor" ] ; then
   php $APP_PATH/artisan config:cache
   php $APP_PATH/artisan view:cache
   # php ${APP_PATH}/artisan route:cache
-  # php ${APP_PATH}/artisan migrate --force
+  php ${APP_PATH}/artisan migrate --force
+
+
+  # Enable Laravel Schedule
+  if [ "$ENABLE_SCHEDULE" = "true" ] ; then
+
+    printf "${COL_GREEN} -----> Info:${COL_RESET} Starting Schedule service...\n"
+    cp -f $SCHEDULE_CONF.default $SCHEDULE_CONF
+  else
+    rm -f $SCHEDULE_CONF
+  fi
+
+  # Enable Laravel Workers
+  if [ "$ENABLE_WORKER" = "true" ] ; then
+    printf "${COL_GREEN} -----> Info:${COL_RESET} Starting Worker service...\n"
+    cp -f $WORKER_CONF.default $WORKER_CONF
+  else
+    rm -f $WORKER_CONF
+  fi
+
+  # Enable Laravel Horizon
+  if [ "$ENABLE_HORIZON" = "true" ] ; then
+    printf "${COL_GREEN} -----> Info:${COL_RESET} Starting Horizon service...\n"
+    cp -f $HORIZON_CONF.default $HORIZON_CONF
+  else
+    rm -f $HORIZON_CONF
+  fi
+
+  # Enable Laravel WebSockets
+  if [ "$ENABLE_WEBSOCKETS" = "true" ] ; then
+    printf "${COL_GREEN} -----> Info:${COL_RESET} Starting WebSockets service...\n"
+    cp -f $WEBSOCKETS_CONF.default $WEBSOCKETS_CONF
+  else
+    rm -f $WEBSOCKETS_CONF
+  fi
+
 else
     printf "${COL_MAGENTA} -----> Warning:${COL_RESET} Directory ${APP_PATH}/vendor does not yet exist.\n"
-fi
-
-# Enable Laravel Schedule
-if [ "$ENABLE_SCHEDULE" = "true" ] ; then
-
-  printf "${COL_GREEN} -----> Info:${COL_RESET} Starting Schedule service...\n"
-  cp -f $SCHEDULE_CONF.default $SCHEDULE_CONF
-else
-  rm -f $SCHEDULE_CONF
-fi
-
-# Enable Laravel Workers
-if [ "$ENABLE_WORKER" = "true" ] ; then
-  printf "${COL_GREEN} -----> Info:${COL_RESET} Starting Worker service...\n"
-  cp -f $WORKER_CONF.default $WORKER_CONF
-else
-  rm -f $WORKER_CONF
-fi
-
-# Enable Laravel Horizon
-if [ "$ENABLE_HORIZON" = "true" ] ; then
-  printf "${COL_GREEN} -----> Info:${COL_RESET} Starting Horizon service...\n"
-  cp -f $HORIZON_CONF.default $HORIZON_CONF
-else
-  rm -f $HORIZON_CONF
-fi
-
-# Enable Laravel WebSockets
-if [ "$ENABLE_WEBSOCKETS" = "true" ] ; then
-  printf "${COL_GREEN} -----> Info:${COL_RESET} Starting WebSockets service...\n"
-  cp -f $WEBSOCKETS_CONF.default $WEBSOCKETS_CONF
-else
-  rm -f $WEBSOCKETS_CONF
 fi
 
 # Enable Supervisor GUI
