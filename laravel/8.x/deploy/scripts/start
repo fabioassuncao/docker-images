@@ -17,6 +17,7 @@ if [ -d "$APP_PATH/vendor" ] ; then
   # php ${APP_PATH}/artisan migrate --force
 else
     printf "${COL_MAGENTA} -----> Warning:${COL_RESET} Directory ${APP_PATH}/vendor does not yet exist.\n"
+    composer install -d=$APP_PATH
 fi
 
 # Enable Laravel Schedule
