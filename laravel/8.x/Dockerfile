@@ -24,7 +24,7 @@ COPY deploy/supervisor.d/* /etc/supervisor.d/
 COPY deploy/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Override default nginx welcome page
-COPY deploy/html /usr/share/nginx/html/public
+COPY deploy/html $APP_PATH/public
 
 # Copy existing application directory
 COPY deploy/php /usr/deploy/php
