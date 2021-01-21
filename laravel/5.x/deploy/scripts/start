@@ -12,7 +12,7 @@ fi
 if [ -d "$APP_PATH/vendor" ] ; then
   printf "${COL_GREEN} -----> Info:${COL_RESET} Caching configuration...\n"
   php $APP_PATH/artisan config:cache
-  php $APP_PATH/artisan view:cache
+  php $APP_PATH/artisan view:clear
   # php ${APP_PATH}/artisan route:cache
   php ${APP_PATH}/artisan migrate --force
 
