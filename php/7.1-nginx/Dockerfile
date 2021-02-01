@@ -78,6 +78,7 @@ RUN buildDeps='curl gcc make autoconf libc-dev zlib1g-dev pkg-config' \
     php7.1-pgsql \
     php7.1-intl \
     php7.1-xml \
+    php7.1-imap \
     php-pear \
     && pecl -d php_suffix=7.1 install -o -f redis memcached \
     && mkdir -p /run/php \
