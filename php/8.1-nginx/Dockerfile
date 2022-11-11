@@ -63,7 +63,6 @@ RUN buildDeps='curl gcc make autoconf libc-dev zlib1g-dev pkg-config' \
             php8.1-bcmath \
             php8.1-dev \
             php8.1-common \
-            php8.1-json \
             php8.1-opcache \
             php8.1-readline \
             php8.1-mbstring \
