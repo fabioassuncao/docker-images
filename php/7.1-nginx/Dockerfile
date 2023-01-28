@@ -134,8 +134,12 @@ ADD ./nginx/default.conf /etc/nginx/conf.d/default.conf
 # Override default nginx welcome page
 COPY html /usr/share/nginx/html
 
+RUN mkdir -p /var/www && ln -s /usr/share/nginx/html /var/www/html
+
 # Add Scripts
 ADD ./start.sh /start.sh
+
+WORKDIR /var/www/html
 
 EXPOSE 80 9001
 
