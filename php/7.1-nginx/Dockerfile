@@ -23,7 +23,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     COL_LGREEN="\x1b[32;01m" \
     COL_CYAN="\x1b[0;36m" \
     COL_GREEN="\x1b[0;32m" \
-    COL_MAGENTA="\x1b[0;35m"
+    COL_MAGENTA="\x1b[0;35m" \
+    DOCKERIZE_VERSION=v0.6.1
 
 
 # Install Basic Requirements
@@ -118,6 +119,10 @@ RUN buildDeps='curl gcc make autoconf libc-dev zlib1g-dev pkg-config' \
     && apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 # Supervisor config
 ADD ./supervisor/supervisord.conf /etc/supervisord.conf
