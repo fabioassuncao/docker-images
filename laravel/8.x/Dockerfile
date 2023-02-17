@@ -1,6 +1,6 @@
-FROM codions/php:7.4-nginx
+FROM fabioassuncao/php:7.4-nginx
 
-LABEL maintainer="Fábio Assunção fabio@codions.com"
+LABEL maintainer="Fábio Assunção fabio23gt@gmail.com"
 
 ENV APP_ENV=production \
     APP_PATH=/usr/share/nginx/html \

@@ -1,6 +1,6 @@
 FROM debian:buster
 
-LABEL maintainer="Fábio Assunção fabio@codions.com"
+LABEL maintainer="Fábio Assunção fabio23gt@gmail.com"
 
 # Let the container know that there is no tty
 ENV DEBIAN_FRONTEND=noninteractive \
