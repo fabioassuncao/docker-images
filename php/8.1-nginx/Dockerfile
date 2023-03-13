@@ -77,9 +77,8 @@ RUN buildDeps='curl gcc make autoconf libc-dev zlib1g-dev pkg-config' \
             php8.1-xml \
             php8.1-imap \
             php8.1-gmp \
-            php8.1-mongodb \
             php-pear \
-    && pecl -d php_suffix=8.1 install -o -f redis memcached \
+    && pecl -d php_suffix=8.1 install -o -f redis memcached mongodb \
     && mkdir -p /run/php \
     && pip install wheel \
     && pip install supervisor supervisor-stdout \
@@ -101,10 +100,13 @@ RUN buildDeps='curl gcc make autoconf libc-dev zlib1g-dev pkg-config' \
     && sed -i -e "s/^;clear_env = no$/clear_env = no/" ${fpm_conf} \
     && echo "extension=redis.so" > /etc/php/8.1/mods-available/redis.ini \
     && echo "extension=memcached.so" > /etc/php/8.1/mods-available/memcached.ini \
+    && echo "extension=mongodb.so" > /etc/php/8.1/mods-available/mongodb.ini \
     && ln -sf /etc/php/8.1/mods-available/redis.ini /etc/php/8.1/fpm/conf.d/20-redis.ini \
     && ln -sf /etc/php/8.1/mods-available/redis.ini /etc/php/8.1/cli/conf.d/20-redis.ini \
     && ln -sf /etc/php/8.1/mods-available/memcached.ini /etc/php/8.1/fpm/conf.d/20-memcached.ini \
     && ln -sf /etc/php/8.1/mods-available/memcached.ini /etc/php/8.1/cli/conf.d/20-memcached.ini \
+    && ln -sf /etc/php/8.1/mods-available/mongodb.ini /etc/php/8.1/fpm/conf.d/20-mongodb.ini \
+    && ln -sf /etc/php/8.1/mods-available/mongodb.ini /etc/php/8.1/cli/conf.d/20-mongodb.ini \
     # Install Composer
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     # Clean up
