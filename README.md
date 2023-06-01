@@ -11,4 +11,4 @@ Docker images for development
 | fabioassuncao/laravel | `8.x` `latest`<br />`5.x`             | Laravel 8.x, Schedule, Worker, WebSockets<br />Laravel 5.x, Schedule, Worker, WebSockets | ![Docker Pulls](https://img.shields.io/docker/pulls/fabioassuncao/laravel) |
 
 ## License
-Licensed under the MIT license.
+Laravel Themes Manager is open-sourced software licensed under the [MIT license](LICENSE).
