@@ -1,84 +1,93 @@
 #!/usr/bin/env bash
 
-set -e
-
-# If there is an env file, source it
+# if there is a env file, source it
 if [ -f "./.env" ]; then
    source ./.env
-# Source the example file otherwise
+# source example else
 else
    source ./.env.example
 fi
 
-# Enabled repositories for the build
+# enabled repositories for the build
 REPOSITORIES=$1
 
-# Enable all repositories if none specified
+# Get changed files as second argument
+changed_files=($2)
+
+# enable all repositories if any specified
 if [[ -z $REPOSITORIES ]]; then
-    REPOSITORIES=($ALL_REPOSITORIES)
+    REPOSITORIES=$ALL_REPOSITORIES
 fi
 
-# Root directory
-ROOT_DIRECTORY=$(pwd)
+# for returning later to the main directory
+ROOT_DIRECTORY=`pwd`
 
-# Function for building images
+# function for building images
 function build_repository {
-  DOCKERFILE_PATH=$1
-  # Read repository configuration
-  source "$DOCKERFILE_PATH/buildvars"
+    # read repository configuration
+    source $ROOT_DIRECTORY/$REPOSITORY/buildvars
 
-  # Build all enabled versions
-  for TAG in $TAGS; do
-    # Some verbose
-    echo $'\n\n'"# Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-    (cd "$DOCKERFILE_PATH" && \
-    if [ "$USE_CACHE" == true ]; then
-      # Build using cache
-      docker build -t "$NAMESPACE/$REPOSITORY:$TAG" .
-    else
-      docker build --no-cache=true -t "$NAMESPACE/$REPOSITORY:$TAG" .
-    fi)
-  done
+    # build all enabled versions
+    for TAG in $TAGS; do
+        # Check if this TAG has changed
+        if [[ " ${changed_files[@]} " =~ "$REPOSITORY/$TAG" ]]; then
+          # If a Dockerfile in this TAG has changed, then build it
 
-  # Create the latest tag
-  echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
-  docker tag "$NAMESPACE/$REPOSITORY:$LATEST" "$NAMESPACE/$REPOSITORY:latest"
+          # some verbose
+          echo $'\n\n'"# Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+          cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
+
+          if [ $USE_CACHE == true ]; then
+            # build using cache
+            docker build -t $NAMESPACE/$REPOSITORY:$TAG .
+          fi
+
+          if [ $USE_CACHE == false ]; then
+            docker build --no-cache=true -t $NAMESPACE/$REPOSITORY:$TAG .
+          fi
+        fi
+    done
+
+    # create the latest tag
+    echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
+    docker tag $NAMESPACE/$REPOSITORY:$LATEST $NAMESPACE/$REPOSITORY:latest
 }
 
-# Function for publishing images
+# function for publishing images
 function publish_repository {
-  DOCKERFILE_PATH=$1
-  # Read repository configuration
-  source "$DOCKERFILE_PATH/buildvars"
+    # read repository configuration
+    source $ROOT_DIRECTORY/$REPOSITORY/buildvars
 
-  # Publish all enabled versions
-  for TAG in $TAGS; do
-    # Some verbose
-    echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-    # Publish
-    docker push "$NAMESPACE/$REPOSITORY:$TAG"
-  done
+    # publish all enabled versions
+    for TAG in $TAGS; do
+        # Check if this TAG has changed
+        if [[ " ${changed_files[@]} " =~ "$REPOSITORY/$TAG" ]]; then
+          # If a Dockerfile in this TAG has changed, then publish it
 
-  # Create the latest tag
-  echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
-  docker push "$NAMESPACE/$REPOSITORY:latest"
+          # some verbose
+          echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+          # publish
+          docker push $NAMESPACE/$REPOSITORY:$TAG
+        fi
+    done
+
+    # create the latest tag
+    echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
+    docker push $NAMESPACE/$REPOSITORY:latest
 }
 
-# For each enabled repository
-for REPOSITORY in "${REPOSITORIES[@]}"; do
-  # Get the Dockerfile path for this repository
-  DOCKERFILE_PATHS=$(grep "$REPOSITORY" changed_dockerfiles.txt)
-
-  # Check if the Dockerfile path is not empty
-  for DOCKERFILE_PATH in $DOCKERFILE_PATHS; do
-    if [[ -n $DOCKERFILE_PATH ]]; then
-      # Build the repository
-      build_repository "$DOCKERFILE_PATH"
+# for each enabled repository
+for REPOSITORY in $REPOSITORIES; do
+  # build and publish the repository if it has changed
+  for file in "${changed_files[@]}"; do
+    if [[ $file =~ ^$REPOSITORY/ ]]; then
+      # If a file in this repository has changed, then build it
+      build_repository $REPOSITORY
 
       # If publishing is enabled
-      if [ "$PUBLISH" == true ]; then
+      if [ $PUBLISH == true ]; then
         # Push the built image
-        publish_repository "$DOCKERFILE_PATH"
+        publish_repository $REPOSITORY
       fi
     fi
   done
