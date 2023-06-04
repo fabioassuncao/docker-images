@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>Docker | PHP FPM + NGINX</title>
   <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="author" content="Fábio Assunção">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
