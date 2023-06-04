@@ -20,7 +20,7 @@ WORKDIR $APP_PATH
 # Supervisor config
 COPY deploy/supervisor.d/* /etc/supervisor.d/
 
-# Override nginx's default config
+# Override nginx default config
 COPY deploy/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Override default nginx welcome page
