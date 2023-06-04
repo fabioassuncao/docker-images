@@ -8,45 +8,24 @@ else
    source ./.env.example
 fi
 
-# enabled repositories for the build
-REPOSITORIES=$1
-
-# Get changed files as second argument
-changed_files=($2)
-
-# enable all repositories if any specified
-if [[ -z $REPOSITORIES ]]; then
-    REPOSITORIES=$ALL_REPOSITORIES
-fi
-
 # for returning later to the main directory
 ROOT_DIRECTORY=`pwd`
 
 # function for building images
 function build_repository {
-    # read repository configuration
-    source $ROOT_DIRECTORY/$REPOSITORY/buildvars
+    REPOSITORY=$1
+    TAG=$2
 
-    # build all enabled versions
-    for TAG in $TAGS; do
-        # Check if this TAG has changed
-        if [[ " ${changed_files[@]} " =~ "$REPOSITORY/$TAG" ]]; then
-          # If a Dockerfile in this TAG has changed, then build it
+    echo $'\n\n'"# Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+    cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
 
-          # some verbose
-          echo $'\n\n'"# Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-          cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
+    if [ $USE_CACHE == true ]; then
+        docker build -t $NAMESPACE/$REPOSITORY:$TAG .
+    fi
 
-          if [ $USE_CACHE == true ]; then
-            # build using cache
-            docker build -t $NAMESPACE/$REPOSITORY:$TAG .
-          fi
-
-          if [ $USE_CACHE == false ]; then
-            docker build --no-cache=true -t $NAMESPACE/$REPOSITORY:$TAG .
-          fi
-        fi
-    done
+    if [ $USE_CACHE == false ]; then
+        docker build --no-cache=true -t $NAMESPACE/$REPOSITORY:$TAG .
+    fi
 
     # create the latest tag
     echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
@@ -55,40 +34,32 @@ function build_repository {
 
 # function for publishing images
 function publish_repository {
-    # read repository configuration
-    source $ROOT_DIRECTORY/$REPOSITORY/buildvars
+    REPOSITORY=$1
+    TAG=$2
 
-    # publish all enabled versions
-    for TAG in $TAGS; do
-        # Check if this TAG has changed
-        if [[ " ${changed_files[@]} " =~ "$REPOSITORY/$TAG" ]]; then
-          # If a Dockerfile in this TAG has changed, then publish it
-
-          # some verbose
-          echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-          # publish
-          docker push $NAMESPACE/$REPOSITORY:$TAG
-        fi
-    done
+    echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+    docker push $NAMESPACE/$REPOSITORY:$TAG
 
     # create the latest tag
     echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
     docker push $NAMESPACE/$REPOSITORY:latest
 }
 
-# for each enabled repository
-for REPOSITORY in $REPOSITORIES; do
-  # build and publish the repository if it has changed
-  for file in "${changed_files[@]}"; do
-    if [[ $file =~ ^$REPOSITORY/ ]]; then
-      # If a file in this repository has changed, then build it
-      build_repository $REPOSITORY
+# Run git diff in the correct directory
+cd $GITHUB_WORKSPACE
 
-      # If publishing is enabled
+CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD)
+
+for file in $CHANGED_FILES; do
+    REPOSITORY=$(echo $file | cut -f1 -d '/')
+    TAG=$(echo $file | cut -f2 -d '/')
+
+    # Ensure the Dockerfile was changed
+    if [[ $file == *Dockerfile* ]]; then
+      build_repository $REPOSITORY $TAG
+
       if [ $PUBLISH == true ]; then
-        # Push the built image
-        publish_repository $REPOSITORY
+        publish_repository $REPOSITORY $TAG
       fi
     fi
-  done
 done

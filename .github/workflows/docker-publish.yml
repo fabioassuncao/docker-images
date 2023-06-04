@@ -2,13 +2,19 @@ name: Docker Build/Publish CI
 
 on:
   push:
+    # Publish `main` as Docker `latest` image.
     branches:
       - main
+
+    # Publish `v1.2.3` tags as releases.
     tags:
       - v*
+
+  # Run tests for any PRs.
   pull_request:
 
 env:
+  # TODO: Change variable to your image's name.
   IMAGE_NAME: deployer
 
 jobs:
@@ -19,15 +25,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Login to Docker Hub
+      - 
+        name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-      - name: Get changed files
-        id: getfile
-        run: echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
 
       - name: Build / Push
-        run: bash build.sh "${REPOSITORIES}" "${{ steps.getfile.outputs.files }}"
+        run: bash build.sh
