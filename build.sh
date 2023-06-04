@@ -44,11 +44,13 @@ function build_repository {
       if [ $USE_CACHE == false ]; then
         docker build --no-cache=true -t $NAMESPACE/$REPOSITORY:$TAG .
       fi
-    done
 
-    # create the latest tag
-    echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
-    docker tag $NAMESPACE/$REPOSITORY:$LATEST $NAMESPACE/$REPOSITORY:latest
+      # if this tag is the latest, create the latest tag
+      if [[ "$TAG" == "$LATEST" ]]; then
+        echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
+        docker tag $NAMESPACE/$REPOSITORY:$LATEST $NAMESPACE/$REPOSITORY:latest
+      fi
+    done
 }
 
 # function for publishing images
@@ -68,11 +70,13 @@ function publish_repository {
       echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
       # publish
       docker push $NAMESPACE/$REPOSITORY:$TAG
-    done
 
-    # create the latest tag
-    echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
-    docker push $NAMESPACE/$REPOSITORY:latest
+      # if this tag is the latest, push the latest tag
+      if [[ "$TAG" == "$LATEST" ]]; then
+        echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
+        docker push $NAMESPACE/$REPOSITORY:latest
+      fi
+    done
 }
 
 # for each enabled repository
