@@ -77,6 +77,7 @@ RUN buildDeps='curl gcc make autoconf libc-dev zlib1g-dev pkg-config' \
             php8.1-xml \
             php8.1-imap \
             php8.1-gmp \
+            php8.1-sqlite \
             php-pear \
     && pecl -d php_suffix=8.1 install -o -f redis memcached mongodb \
     && mkdir -p /run/php \
