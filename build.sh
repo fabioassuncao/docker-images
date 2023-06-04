@@ -48,7 +48,7 @@ function publish_repository {
 # Run git diff in the correct directory
 cd $GITHUB_WORKSPACE
 
-CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD)
+CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD 2> /dev/null || true)
 
 for file in $CHANGED_FILES; do
     REPOSITORY=$(echo $file | cut -f1 -d '/')
