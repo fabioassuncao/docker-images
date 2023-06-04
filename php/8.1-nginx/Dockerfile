@@ -128,10 +128,10 @@ ADD ./supervisor/supervisor.d /etc/supervisor.d
 # Override nginx's default config
 ADD ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
+RUN mkdir -p /var/www && ln -s /usr/share/nginx/html /var/www/html
+
 # Override default nginx welcome page
 COPY html /usr/share/nginx/html
-
-RUN mkdir -p /var/www && ln -s /usr/share/nginx/html /var/www/html
 
 # Add Scripts
 ADD ./start.sh /start.sh
