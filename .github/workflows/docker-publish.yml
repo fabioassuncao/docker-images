@@ -32,5 +32,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Get changed Dockerfiles
+        run: bash get_changed_dockerfiles.sh > changed_dockerfiles.txt
+
       - name: Build / Push
-        run: bash build.sh
+        run: cat changed_dockerfiles.txt | xargs -I {} bash build.sh {}

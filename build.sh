@@ -1,77 +1,85 @@
 #!/usr/bin/env bash
 
-# if there is a env file, source it
+set -e
+
+# If there is an env file, source it
 if [ -f "./.env" ]; then
    source ./.env
-# source example else
+# Source the example file otherwise
 else
    source ./.env.example
 fi
 
-# enabled repositories for the build
+# Enabled repositories for the build
 REPOSITORIES=$1
 
-
-# enable all repositories if any specified
+# Enable all repositories if none specified
 if [[ -z $REPOSITORIES ]]; then
-    REPOSITORIES=$ALL_REPOSITORIES
+    REPOSITORIES=($ALL_REPOSITORIES)
 fi
 
-# for returning later to the main directory
-ROOT_DIRECTORY=`pwd`
+# Root directory
+ROOT_DIRECTORY=$(pwd)
 
-# function for building images
+# Function for building images
 function build_repository {
-    # read repository configuration
-    source $ROOT_DIRECTORY/$REPOSITORY/buildvars
+  DOCKERFILE_PATH=$1
+  # Read repository configuration
+  source "$DOCKERFILE_PATH/buildvars"
 
-    # build all enabled versions
-    for TAG in $TAGS; do
-      # some verbose
-      echo $'\n\n'"# Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-      cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
+  # Build all enabled versions
+  for TAG in $TAGS; do
+    # Some verbose
+    echo $'\n\n'"# Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+    (cd "$DOCKERFILE_PATH" && \
+    if [ "$USE_CACHE" == true ]; then
+      # Build using cache
+      docker build -t "$NAMESPACE/$REPOSITORY:$TAG" .
+    else
+      docker build --no-cache=true -t "$NAMESPACE/$REPOSITORY:$TAG" .
+    fi)
+  done
 
-      if [ $USE_CACHE == true ]; then
-        # build using cache
-        docker build -t $NAMESPACE/$REPOSITORY:$TAG .
-      fi
-
-      if [ $USE_CACHE == false ]; then
-        docker build --no-cache=true -t $NAMESPACE/$REPOSITORY:$TAG .
-      fi
-    done
-
-    # create the latest tag
-    echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
-    docker tag $NAMESPACE/$REPOSITORY:$LATEST $NAMESPACE/$REPOSITORY:latest
+  # Create the latest tag
+  echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
+  docker tag "$NAMESPACE/$REPOSITORY:$LATEST" "$NAMESPACE/$REPOSITORY:latest"
 }
 
-# function for publishing images
+# Function for publishing images
 function publish_repository {
-    # read repository configuration
-    source $ROOT_DIRECTORY/$REPOSITORY/buildvars
+  DOCKERFILE_PATH=$1
+  # Read repository configuration
+  source "$DOCKERFILE_PATH/buildvars"
 
-    # publish all enabled versions
-    for TAG in $TAGS; do
-      # some verbose
-      echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-      # publish
-      docker push $NAMESPACE/$REPOSITORY:$TAG
-    done
+  # Publish all enabled versions
+  for TAG in $TAGS; do
+    # Some verbose
+    echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
+    # Publish
+    docker push "$NAMESPACE/$REPOSITORY:$TAG"
+  done
 
-    # create the latest tag
-    echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
-    docker push $NAMESPACE/$REPOSITORY:latest
+  # Create the latest tag
+  echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
+  docker push "$NAMESPACE/$REPOSITORY:latest"
 }
 
-# for each enabled repository
-for REPOSITORY in $REPOSITORIES; do
-  # build the repository
-  build_repository $REPOSITORY
+# For each enabled repository
+for REPOSITORY in "${REPOSITORIES[@]}"; do
+  # Get the Dockerfile path for this repository
+  DOCKERFILE_PATHS=$(grep "$REPOSITORY" changed_dockerfiles.txt)
 
-  # If publishing is enabled
-  if [ $PUBLISH == true ]; then
-    # Push the built image
-    publish_repository $REPOSITORY
-  fi
+  # Check if the Dockerfile path is not empty
+  for DOCKERFILE_PATH in $DOCKERFILE_PATHS; do
+    if [[ -n $DOCKERFILE_PATH ]]; then
+      # Build the repository
+      build_repository "$DOCKERFILE_PATH"
+
+      # If publishing is enabled
+      if [ "$PUBLISH" == true ]; then
+        # Push the built image
+        publish_repository "$DOCKERFILE_PATH"
+      fi
+    fi
+  done
 done
