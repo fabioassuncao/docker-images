@@ -26,9 +26,9 @@ function build_repository {
 
     # build all enabled versions
     for TAG in $TAGS; do
-      # Check if Dockerfile has been modified
-      if git diff --quiet HEAD^ HEAD -- $REPOSITORY/$TAG/Dockerfile; then
-        echo "$REPOSITORY/$TAG/Dockerfile has not changed. Skipping build."
+      # Check if any file has been modified in the directory
+      if git diff --quiet HEAD^ HEAD -- $REPOSITORY/$TAG; then
+        echo "$REPOSITORY/$TAG has not changed. Skipping build."
         continue
       fi
 
@@ -60,9 +60,9 @@ function publish_repository {
 
     # publish all enabled versions
     for TAG in $TAGS; do
-      # Check if Dockerfile has been modified
-      if git diff --quiet HEAD^ HEAD -- $REPOSITORY/$TAG/Dockerfile; then
-        echo "$REPOSITORY/$TAG/Dockerfile has not changed. Skipping push."
+      # Check if any file has been modified in the directory
+      if git diff --quiet HEAD^ HEAD -- $REPOSITORY/$TAG; then
+        echo "$REPOSITORY/$TAG has not changed. Skipping push."
         continue
       fi
 
