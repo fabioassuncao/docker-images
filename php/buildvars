@@ -1,2 +1,2 @@
-TAGS="8.1-nginx 7.4-nginx 7.3-nginx 7.1-nginx"
-LATEST="8.1-nginx"
+TAGS="8.1-nginx-slim 8.1-nginx 7.4-nginx 7.3-nginx 7.1-nginx"
+LATEST="8.1-nginx-slim"
