@@ -33,10 +33,6 @@ RUN chown www-data:www-data /var/www/
 RUN usermod -u $WWWUSER www-data
 RUN groupmod -o -g $WWWGROUP www-data
 
-# Copy entrypoint script
-COPY ./entrypoint /usr/local/bin/entrypoint
-RUN chmod +x /usr/local/bin/entrypoint
-
 # Copy start script
 COPY ./start /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
@@ -83,9 +79,6 @@ USER root
 
 EXPOSE 80
 EXPOSE 443
-
-# Set a custom entrypoint to allow for privilege dropping and one-off commands
-# ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 # Set default command to launch the all-in-one configuration supervised by supervisord
 CMD ["/usr/local/bin/start"]
