@@ -1,4 +1,4 @@
-name: Docker Build/Publish CI
+name: Docker CI
 
 on:
   push:
@@ -8,10 +8,6 @@ on:
 
   # Run tests for any PRs.
   pull_request:
-
-env:
-  # TODO: Change variable to your image's name.
-  IMAGE_NAME: deployer
 
 jobs:
   push:
