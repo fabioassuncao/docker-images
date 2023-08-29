@@ -16,11 +16,12 @@ RUN apt-get update \
     && apt-get install -y gnupg gosu curl ca-certificates zip unzip pv libzip-dev git supervisor libcap2-bin libpng-dev python2 \
     && apt-get install -y nginx \
     && apt-get install -y default-mysql-client libpq-dev \
-    && apt-get install -y libldap2-dev \
+    && apt-get install -y libldap2-dev libc-client-dev libkrb5-dev \
     && apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
     && docker-php-ext-install -j$(nproc) bcmath pdo_mysql pdo_pgsql pgsql ldap zip gd opcache exif imap \
     && pecl install xdebug-3.1.5 \
     && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
