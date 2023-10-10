@@ -21,7 +21,7 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
-    client_max_body_size 1G;
+    client_max_body_size 5G;
  
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
