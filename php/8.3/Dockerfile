@@ -38,6 +38,7 @@ RUN apk add --no-cache php83 \
     php83-posix \
     php83-dev \
     php83-pear \
+    php83-calendar \
     zip \
     unzip \
     curl \
