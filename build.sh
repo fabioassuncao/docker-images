@@ -1,80 +1,82 @@
 #!/usr/bin/env bash
 
-# If there is an env file, source it
+# Define default architectures
+DEFAULT_ARCHS="linux/arm64"
+ARCHS="linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6"
+
+# Load environment variables
 if [ -f "./.env" ]; then
    source ./.env
-# Source the example otherwise
 else
    source ./.env.example
 fi
 
-# Enabled repositories for the build
+# Set repositories to process
 REPOSITORIES=$1
-
-# Enable all repositories if any are specified
 if [[ -z $REPOSITORIES ]]; then
     REPOSITORIES=$ALL_REPOSITORIES
 fi
 
-# For returning later to the main directory
-ROOT_DIRECTORY=`pwd`
+# Save the root directory
+ROOT_DIRECTORY=$(pwd)
 
-# Function for building images
+# Function to build Docker images
 function build_repository {
-    # Read repository configuration
-    source $ROOT_DIRECTORY/$REPOSITORY/buildvars
+    local REPOSITORY=$1
+    local TAGS=$2
+    local NAMESPACE=$3
+    local USE_CACHE=$4
 
-    # Build all enabled versions
     for TAG in $TAGS; do
-      # Check if any file has been modified in the directory
-      if git diff --quiet HEAD^ HEAD -- $REPOSITORY/$TAG; then
+      if git diff --quiet HEAD^ HEAD -- "$REPOSITORY/$TAG"; then
         echo "$REPOSITORY/$TAG has not changed. Skipping build."
         continue
       fi
 
-      # Some verbosity
       echo $'\n\n'"# Building $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-      cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
+      cd "$ROOT_DIRECTORY/$REPOSITORY/$TAG"
 
-      if [ $USE_CACHE == true ]; then
-        # Build using cache
-        docker build -t $NAMESPACE/$REPOSITORY:$TAG .
+      local BUILD_CMD="docker buildx build --platform $ARCHS -t $NAMESPACE/$REPOSITORY:$TAG ."
+      if [ "$USE_CACHE" == "false" ]; then
+        BUILD_CMD+=" --no-cache"
       fi
 
-      if [ $USE_CACHE == false ]; then
-        docker build --no-cache=true -t $NAMESPACE/$REPOSITORY:$TAG .
+      if [ "$PUBLISH" == "true" ]; then
+        BUILD_CMD+=" --push"
       fi
 
-      # If this tag is the latest, create the 'latest' tag
+      eval $BUILD_CMD
+
       if [[ "$TAG" == "$LATEST" ]]; then
-        echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
-        docker tag $NAMESPACE/$REPOSITORY:$LATEST $NAMESPACE/$REPOSITORY:latest
+        echo $'\n\n'"# Tagging $NAMESPACE/$REPOSITORY:$TAG as 'latest'"$'\n'
+        docker tag "$NAMESPACE/$REPOSITORY:$TAG" "$NAMESPACE/$REPOSITORY:latest"
+
+        if [ "$PUBLISH" == "true" ]; then
+          echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest"$'\n'
+          docker push "$NAMESPACE/$REPOSITORY:latest"
+        fi
       fi
     done
 }
 
-# Function for publishing images
+# Function to publish Docker images
 function publish_repository {
-    # Read repository configuration
-    source $ROOT_DIRECTORY/$REPOSITORY/buildvars
+    local REPOSITORY=$1
+    local TAGS=$2
+    local NAMESPACE=$3
 
-    # Publish all enabled versions
     for TAG in $TAGS; do
-      # Check if any file has been modified in the directory
-      if git diff --quiet HEAD^ HEAD -- $REPOSITORY/$TAG; then
+      if git diff --quiet HEAD^ HEAD -- "$REPOSITORY/$TAG"; then
         echo "$REPOSITORY/$TAG has not changed. Skipping push."
         continue
       fi
 
-      # Some verbosity
       echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:$TAG"$'\n'
-      # Publish
-      docker push $NAMESPACE/$REPOSITORY:$TAG
+      docker push "$NAMESPACE/$REPOSITORY:$TAG"
 
-      # If this tag is the latest, push the 'latest' tag
       if [[ "$TAG" == "$LATEST" ]]; then
-        echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
-        docker push $NAMESPACE/$REPOSITORY:latest
+        echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest"$'\n'
+        docker push "$NAMESPACE/$REPOSITORY:latest"
       fi
     done
 }
@@ -82,51 +84,33 @@ function publish_repository {
 # Array to store the images that need to be built and published
 images_to_process=()
 
-# For each enabled repository
+# Determine which repositories need to be processed
 for REPOSITORY in $REPOSITORIES; do
-  # Read repository configuration
-  source $ROOT_DIRECTORY/$REPOSITORY/buildvars
+  if [ -f "$ROOT_DIRECTORY/$REPOSITORY/buildvars" ]; then
+    source "$ROOT_DIRECTORY/$REPOSITORY/buildvars"
 
-  # Check all tags to determine which need to be processed
-  for TAG in $TAGS; do
-    # Check if any file has been modified in the directory
-    if git diff --quiet HEAD^ HEAD -- $REPOSITORY/$TAG; then
-      echo "$REPOSITORY/$TAG has not changed."
-    else
-      images_to_process+=("$REPOSITORY:$TAG")
-    fi
-  done
+    for TAG in $TAGS; do
+      if ! git diff --quiet HEAD^ HEAD -- "$REPOSITORY/$TAG"; then
+        images_to_process+=("$REPOSITORY:$TAG")
+      else
+        echo "$REPOSITORY/$TAG has not changed."
+      fi
+    done
+  else
+    echo "Configuration for $REPOSITORY not found. Skipping."
+  fi
 done
 
-# Process the images stored in the array
+# Process the images that need to be built and published
 for image in "${images_to_process[@]}"; do
   REPOSITORY=$(echo "$image" | cut -d':' -f1)
   TAG=$(echo "$image" | cut -d':' -f2)
 
   # Build the image
-  echo $'\n\n'"# Building $NAMESPACE/$image"$'\n'
-  cd $ROOT_DIRECTORY/$REPOSITORY/$TAG
-  if [ $USE_CACHE == true ]; then
-    docker build -t $NAMESPACE/$image .
-  else
-    docker build --no-cache=true -t $NAMESPACE/$image .
-  fi
+  build_repository "$REPOSITORY" "$TAG" "$NAMESPACE" "$USE_CACHE"
 
-  # If this tag is the latest, create the 'latest' tag
-  if [[ "$TAG" == "$LATEST" ]]; then
-    echo $'\n\n'"# Aliasing $LATEST as 'latest'"$'\n'
-    docker tag $NAMESPACE/$image $NAMESPACE/$REPOSITORY:latest
-  fi
-
-  # If publishing is enabled, push the image
-  if [ $PUBLISH == true ]; then
-    echo $'\n\n'"# Publishing $NAMESPACE/$image"$'\n'
-    docker push $NAMESPACE/$image
-
-    # If this tag is the latest, push the 'latest' tag as well
-    if [[ "$TAG" == "$LATEST" ]]; then
-      echo $'\n\n'"# Publishing $NAMESPACE/$REPOSITORY:latest (from $LATEST)"$'\n'
-      docker push $NAMESPACE/$REPOSITORY:latest
-    fi
+  # Publish the image if required
+  if [ "$PUBLISH" == "true" ]; then
+    publish_repository "$REPOSITORY" "$TAG" "$NAMESPACE"
   fi
 done

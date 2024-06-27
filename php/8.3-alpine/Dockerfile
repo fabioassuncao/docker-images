@@ -1,7 +1,5 @@
 FROM alpine:latest
 
-WORKDIR /var/www/html
-
 # Essentials
 RUN echo "UTC" > /etc/timezone && \
     apk add --no-cache zip unzip curl sqlite bash && \
@@ -54,6 +52,8 @@ COPY ./docker/php/conf.d/custom.ini /etc/php83/conf.d/custom.ini
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+WORKDIR /var/www/html
 
 # Building process
 COPY . /var/www/html
