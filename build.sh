@@ -4,12 +4,17 @@
 DEFAULT_ARCHS="linux/arm64"
 ARCHS="linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6"
 
-# Load environment variables
-if [ -f "./.env" ]; then
-   source ./.env
-else
-   source ./.env.example
-fi
+# resulting images namespace on docker hub
+NAMESPACE=ghcr.io/fabioassuncao
+
+# publish the built images
+PUBLISH=true
+
+# use build cache
+USE_CACHE=true
+
+# all repositories
+ALL_REPOSITORIES="php"
 
 # Set repositories to process
 REPOSITORIES=$1
