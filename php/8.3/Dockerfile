@@ -1,8 +1,10 @@
-FROM alpine:latest
+ARG ALPINE_VERSION=edge
+FROM alpine:${ALPINE_VERSION}
+LABEL Maintainer="Fábio Assunçãp <fabio23gt@gmail.com>"
+LABEL Description="Lightweight container with PHP 8.3 based on Alpine Linux."
 
 # Essentials
 RUN echo "UTC" > /etc/timezone && \
-    apk add --no-cache zip unzip curl sqlite bash && \
     sed -i 's/bin\/ash/bin\/bash/g' /etc/passwd
 
 # Installing PHP and extensions
@@ -36,6 +38,11 @@ RUN apk add --no-cache php83 \
     php83-posix \
     php83-dev \
     php83-pear \
+    zip \
+    unzip \
+    curl \
+    sqlite \
+    bash \
     gcc \
     make \
     autoconf \
