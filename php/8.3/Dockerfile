@@ -48,19 +48,14 @@ RUN pecl install excimer && echo "extension=excimer.so" > /etc/php83/conf.d/50_e
 RUN apk del gcc make autoconf musl-dev php83-dev
 
 # PHP Configuration
-COPY ./docker/php/conf.d/custom.ini /etc/php83/conf.d/custom.ini
+COPY ./conf.d/custom.ini /etc/php83/conf.d/custom.ini
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
 
-# Building process
-COPY . /var/www/html
-RUN composer install && \
-    chown -R nobody:nobody /var/www/html/storage
-
-COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint
+COPY ./entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod +x /usr/local/bin/entrypoint
 
 EXPOSE 8000
