@@ -72,11 +72,11 @@ fi
 # Execute role-specific commands
 case "$CONTAINER_ROLE" in
     app)
-        log "INFO" "Running octane..."
+        log "INFO" "Running app..."
         exec $APP_COMMAND
         ;;
     worker)
-        log "INFO" "Running the queue..."
+        log "INFO" "Running the worker..."
         exec $WORKER_COMMAND
         ;;
     horizon)
