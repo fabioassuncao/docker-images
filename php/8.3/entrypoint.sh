@@ -54,8 +54,8 @@ trap 'log "INFO" "Stopping container..."; exit 0;' SIGTERM SIGINT
 # Check if vendor directory exists
 while [ ! -d "/var/www/html/vendor" ]; do
     log "WARNING" "The directory /var/www/html/vendor does not exist yet. Please run the \"composer install\" command to ensure that all necessary dependencies are properly installed."
-    log "INFO" "Retrying in 60 seconds..."
-    sleep 60s
+    log "INFO" "Retrying in 300 seconds..."
+    sleep 300s
 done
 
 # Check if artisan file exists
