@@ -17,7 +17,7 @@ SCHEDULER_COMMAND=${SCHEDULER_COMMAND:-"$ARTISAN schedule:run --no-interaction"}
 log() {
     local type="$1"
     local message="$2"
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")] [$type] $message"
+    echo "[$type] $message"
 }
 
 # Function to run setup tasks
