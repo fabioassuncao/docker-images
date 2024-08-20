@@ -39,6 +39,7 @@ RUN apk add --no-cache php83 \
     php83-dev \
     php83-pear \
     php83-calendar \
+    php83-bcmath \
     zip \
     unzip \
     curl \
