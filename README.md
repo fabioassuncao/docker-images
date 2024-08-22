@@ -88,7 +88,9 @@ networks:
 ```
 
 ### PHP version support
-- [x] PHP 8.3
+- [x] PHP 8.3 (Lightweight container with PHP 8.3 based on Alpine Linux)
+- [x] PHP 8.2 (Lightweight container with PHP 8.2 based on Alpine Linux)
+- [x] PHP 8.2-nginx (Lightweight container with PHP 8.2 and nginx based on Debian bullseye)
 
 
 ## License

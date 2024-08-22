@@ -1,0 +1,41 @@
+x-function: &common_setup
+    build:
+        context: ./php/8.2-nginx/
+        dockerfile: ./Dockerfile
+    restart: always
+    environment:
+        CONTAINER_MODE: manual
+    networks:
+      - php
+
+services:
+
+  app:
+    <<: *common_setup
+    environment:
+      CONTAINER_ROLE: app
+    ports:
+      - '8000:80'
+
+  scheduler:
+    <<: *common_setup
+    environment:
+      CONTAINER_ROLE: scheduler
+      SCHEDULER_COMMAND: php -d variables_order=EGPCS /var/www/html/run.php --message="Scheduler" --loop=0
+      SCHEDULER_SLEEP: 3s
+
+  worker:
+    <<: *common_setup
+    environment:
+      CONTAINER_ROLE: worker
+      WORKER_COMMAND: php -d variables_order=EGPCS /var/www/html/run.php --message="Worker" --loop=1
+
+  horizon:
+    <<: *common_setup
+    environment:
+      CONTAINER_ROLE: horizon
+      HORIZON_COMMAND: php -d variables_order=EGPCS /var/www/html/run.php --message="Horizon" --loop=1
+
+networks:
+  php:
+    driver: bridge
