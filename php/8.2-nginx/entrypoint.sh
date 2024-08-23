@@ -27,7 +27,7 @@ log() {
 
 # Function to run setup tasks
 run_setup_tasks() {
-    log "INFO" "Changing permissions..."
+    log "INFO" "Preparing application..."
     chown -R :www-data /var/www/html/storage/app
     chown -R :www-data /var/www/html/storage/logs
     chown -R :www-data /var/www/html/bootstrap/cache
@@ -36,8 +36,6 @@ run_setup_tasks() {
     find /var/www/html/bootstrap/cache/ -type f -exec chmod 664 {} \;
     find /var/www/html/bootstrap/cache/ -type d -exec chmod 775 {} \;
 
-    
-    log "INFO" "Preparing application..."
     $ARTISAN storage:link || log "WARNING" "Failed to create storage link"
     $ARTISAN config:cache || log "WARNING" "Failed to cache config"
     $ARTISAN migrate --force || log "WARNING" "Failed to run migrations"
