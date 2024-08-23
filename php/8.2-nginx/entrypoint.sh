@@ -28,8 +28,7 @@ log() {
 # Function to run setup tasks
 run_setup_tasks() {
     log "INFO" "Preparing application..."
-    chown -R :www-data /var/www/html/storage/app
-    chown -R :www-data /var/www/html/storage/logs
+    chown -R :www-data /var/www/html/storage
     chown -R :www-data /var/www/html/bootstrap/cache
     find /var/www/html/storage/ -type f -exec chmod 664 {} \;
     find /var/www/html/storage/ -type d -exec chmod 775 {} \;
