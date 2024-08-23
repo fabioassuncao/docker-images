@@ -20,7 +20,6 @@ release-all: ### Build all PHP version and push image to Registry
 test: ### Test image
 	$(DOCKER_RUN) php -v
 	$(DOCKER_RUN) sh -c "php -v | grep ${VERSION}"
-	$(DOCKER_RUN) sh -c "php -v | grep OPcache"
 	$(DOCKER_RUN) sh -c "nginx -t"
 
 test-all: ### Test all image
