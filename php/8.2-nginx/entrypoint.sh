@@ -29,7 +29,7 @@ log() {
 run_setup_tasks() {
     log "INFO" "Preparing application..."
     if [ -w /var/www/html/storage ]; then
-        chown -R nobody:nobody /var/www/html/storage
+        chown -R www-data:www-data /var/www/html/storage
     else
         log "WARNING" "Insufficient permissions to change ownership of storage directory"
     fi
