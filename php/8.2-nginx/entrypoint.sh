@@ -3,7 +3,7 @@
 set -e
 
 # Set default values if not provided
-CONTAINER_MODE=${CONTAINER_MODE:-'manual'}
+CONTAINER_MODE=${CONTAINER_MODE:-'automatic'} # automatic|manual
 CONTAINER_ROLE=${CONTAINER_ROLE:-'app'}
 APP_ENV=${APP_ENV:-'production'}
 
