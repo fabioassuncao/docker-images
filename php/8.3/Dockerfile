@@ -12,7 +12,6 @@ RUN apk add --no-cache php83 \
     php83-common \
     php83-gd \
     php83-pdo \
-    php83-opcache \
     php83-zip \
     php83-phar \
     php83-iconv \

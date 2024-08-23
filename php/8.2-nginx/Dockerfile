@@ -24,7 +24,7 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install -j$(nproc) bcmath pdo_mysql pdo_pgsql pgsql ldap zip gd opcache exif imap mysqli intl \
+    && docker-php-ext-install -j$(nproc) bcmath pdo_mysql pdo_pgsql pgsql ldap zip gd exif imap mysqli intl \
     && pecl install imagick redis xdebug-3.1.5 \
     && docker-php-ext-enable redis \
     && docker-php-ext-enable imagick \
@@ -64,7 +64,6 @@ RUN echo 'ULIMIT="-n 65535"' >> /etc/default/nginx
 # Copy php config files
 COPY ./php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY ./php/php.ini /usr/local/etc/php/conf.d/99-app.ini
-COPY ./php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 RUN mkdir -p /var/log/php
 
 # Copy ldap config files

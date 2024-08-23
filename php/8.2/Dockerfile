@@ -12,7 +12,6 @@ RUN apk add --no-cache php82 \
     php82-common \
     php82-gd \
     php82-pdo \
-    php82-opcache \
     php82-zip \
     php82-phar \
     php82-iconv \
