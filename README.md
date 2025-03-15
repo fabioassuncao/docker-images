@@ -16,44 +16,44 @@ Simple docker image for PHP/Laravel development.
 Build image
 
 ```shell
-VERSION=8.3 make build
+VERSION=8.4 make build
 ```
 
 Release image
 
 ```shell
-VERSION=8.3 make release
+VERSION=8.4 make release
 ```
 
 How to customize image name
 
 ```shell
-VERSION=8.3 IMAGE=ghcr.io/fabioassuncao/php make build
+VERSION=8.4 IMAGE=ghcr.io/fabioassuncao/php make build
 ```
 
-Test image by PHP version
+Check image by PHP version
 
 ```shell
-VERSION=8.3 make test
+VERSION=8.4 make check
 ```
 
-Test all image
+Check all image
 
 ```shell
-make test-all
+make check-all
 ```
 
 Mount your code to be served with container
 
 ```shell
-docker run --name=app -v /path/to/project:/var/www/html -p 8000:8000 ghcr.io/fabioassuncao/php:8.3
+docker run --name=app -v /path/to/project:/var/www/html -p 8000:8000 ghcr.io/fabioassuncao/php:8.4
 ```
 
 Using docker-compose
 
 ```
 x-function: &common_setup
-    image: ghcr.io/fabioassuncao/php:8.3
+    image: ghcr.io/fabioassuncao/php:8.4
     restart: always
     environment:
         CONTAINER_ROLE: app
@@ -88,6 +88,7 @@ networks:
 ```
 
 ### PHP version support
+- [x] PHP 8.4 (Lightweight container with PHP 8.4 based on Alpine Linux)
 - [x] PHP 8.3 (Lightweight container with PHP 8.3 based on Alpine Linux)
 - [x] PHP 8.2 (Lightweight container with PHP 8.2 based on Alpine Linux)
 - [x] PHP 8.2-nginx (Lightweight container with PHP 8.2 and nginx based on Debian bullseye)

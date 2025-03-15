@@ -1,10 +1,12 @@
 x-function: &common_setup
     build:
-        context: ./php/8.2-nginx/
+        context: ./php/8.4/
         dockerfile: ./Dockerfile
     restart: always
     environment:
         CONTAINER_MODE: manual
+    volumes:
+        - ./php/8.4/test:/var/www/html
     networks:
       - php
 
@@ -14,26 +16,30 @@ services:
     <<: *common_setup
     environment:
       CONTAINER_ROLE: app
+      USE_LARAVEL: false
+      APP_COMMAND: php -d variables_order=EGPCS -S 0.0.0.0:8000 /var/www/html/web.php
     ports:
-      - '8000:80'
+      - '8000:8000'
 
   scheduler:
     <<: *common_setup
     environment:
       CONTAINER_ROLE: scheduler
+      USE_LARAVEL: false
       SCHEDULER_COMMAND: php -d variables_order=EGPCS /var/www/html/run.php --message="Scheduler" --loop=0
-      SCHEDULER_SLEEP: 3s
 
   worker:
     <<: *common_setup
     environment:
       CONTAINER_ROLE: worker
+      USE_LARAVEL: false
       WORKER_COMMAND: php -d variables_order=EGPCS /var/www/html/run.php --message="Worker" --loop=1
 
   horizon:
     <<: *common_setup
     environment:
       CONTAINER_ROLE: horizon
+      USE_LARAVEL: false
       HORIZON_COMMAND: php -d variables_order=EGPCS /var/www/html/run.php --message="Horizon" --loop=1
 
 networks:
