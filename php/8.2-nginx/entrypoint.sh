@@ -36,7 +36,7 @@ run_setup_tasks() {
     find /var/www/html/bootstrap/cache/ -type d -exec chmod 775 {} \;
 
     $ARTISAN storage:link || log "WARNING" "Failed to create storage link"
-    $ARTISAN config:cache || log "WARNING" "Failed to cache config"
+    $ARTISAN optimize || log "WARNING" "Failed to optimize"
     $ARTISAN migrate --force || log "WARNING" "Failed to run migrations"
 }
 

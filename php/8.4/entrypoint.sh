@@ -33,7 +33,7 @@ run_setup_tasks() {
     fi
     
     $ARTISAN storage:link || log "WARNING" "Failed to create storage link"
-    $ARTISAN config:cache || log "WARNING" "Failed to cache config"
+    $ARTISAN optimize || log "WARNING" "Failed to optimize"
     $ARTISAN migrate --force || log "WARNING" "Failed to run migrations"
 }
 
