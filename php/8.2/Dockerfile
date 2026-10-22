@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=edge
+ARG ALPINE_VERSION=3.22
 FROM alpine:${ALPINE_VERSION}
 LABEL Maintainer="Fábio Assunçãp <fabio23gt@gmail.com>"
 LABEL Description="Lightweight container with PHP 8.2 based on Alpine Linux."

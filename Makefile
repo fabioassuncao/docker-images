@@ -1,6 +1,7 @@
 IMAGE?=ghcr.io/fabioassuncao/php
 VERSION?=8.4
-DOCKER_RUN:=docker run --rm ${IMAGE}:${VERSION}
+VERSIONS?=8.2 8.3 8.4 8.2-nginx
+DOCKER_RUN:=docker run --rm --entrypoint "" ${IMAGE}:${VERSION}
 DEFAULT_ARCHS?=linux/amd64
 
 help:
@@ -15,11 +16,11 @@ release: ### Build and push image to Registry
 
 release-all: ### Build all PHP version and push image to Registry
 	echo "Releasing all PHP version"
-	VERSION=8.4 make release
+	for v in $(VERSIONS); do VERSION=$$v make release || exit 1; done
 
 check: ### check image
 	$(DOCKER_RUN) php -v
-	$(DOCKER_RUN) sh -c "php -v | grep ${VERSION}"
+	$(DOCKER_RUN) sh -c "php -v | grep $(firstword $(subst -, ,${VERSION}))"
 
 check-all: ### Check all image
-	VERSION=8.4 make build check
+	for v in $(VERSIONS); do VERSION=$$v make build check || exit 1; done

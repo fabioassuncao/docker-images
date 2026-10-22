@@ -2,28 +2,80 @@ name: Docker CI
 
 on:
   push:
-    # Publish `main` as Docker `latest` image.
+    # Publish `main` images to GHCR.
     branches:
       - main
 
-  # Run tests for any PRs.
+  # Build and verify images for any PRs (no push).
   pull_request:
 
+  # Allow security rebuilds without a new commit.
+  workflow_dispatch:
+
+env:
+  IMAGE: ghcr.io/fabioassuncao/php
+  PLATFORMS: linux/amd64
+
 jobs:
-  push:
+  build:
+    name: php:${{ matrix.version }}
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # min_php: lowest PHP release patched against CVE-2026-109618 / CVE-2026-109619 (PHP2Shell).
+          - version: '8.2'
+            min_php: 8.2.35
+          - version: '8.3'
+            min_php: 8.3.36
+          - version: '8.4'
+            min_php: 8.4.27
+          - version: 8.2-nginx
+            min_php: 8.2.35
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push to registry
-        run: make release-all
+      - name: Build image
+        run: |
+          docker buildx build --load --pull --no-cache \
+            --platform "$PLATFORMS" \
+            -t "$IMAGE:${{ matrix.version }}" \
+            -f "php/${{ matrix.version }}/Dockerfile" "php/${{ matrix.version }}/"
+
+      - name: Verify patched PHP version
+        id: php
+        run: |
+          PHP_VERSION=$(docker run --rm --entrypoint php "$IMAGE:${{ matrix.version }}" -r 'echo PHP_VERSION;')
+          echo "PHP version: $PHP_VERSION"
+          docker run --rm --entrypoint php "$IMAGE:${{ matrix.version }}" -m
+          docker run --rm --entrypoint php "$IMAGE:${{ matrix.version }}" \
+            -r 'exit(version_compare(PHP_VERSION, "${{ matrix.min_php }}", ">=") ? 0 : 1);' \
+            || { echo "::error::PHP $PHP_VERSION is vulnerable (requires >= ${{ matrix.min_php }})"; exit 1; }
+          echo "version=$PHP_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Push to registry
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          SUFFIX=$(echo "${{ matrix.version }}" | sed -n 's/^[0-9.]*//p')
+          FULL_TAG="${{ steps.php.outputs.version }}${SUFFIX}"
+          docker tag "$IMAGE:${{ matrix.version }}" "$IMAGE:$FULL_TAG"
+          docker push "$IMAGE:${{ matrix.version }}"
+          docker push "$IMAGE:$FULL_TAG"

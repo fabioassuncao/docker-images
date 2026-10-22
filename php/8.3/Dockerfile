@@ -49,6 +49,14 @@ RUN apk add --no-cache php83 \
     autoconf \
     musl-dev
 
+# Alpine no longer ships unversioned binaries for php83
+RUN for bin in php pecl pear peardev; do \
+        [ -e /usr/bin/$bin ] || ln -s ${bin}83 /usr/bin/$bin; \
+    done && \
+    for bin in phar phar.phar; do \
+        [ -e /usr/bin/$bin ] || ln -s phar83.phar /usr/bin/$bin; \
+    done
+
 # Install excimer via pecl
 RUN pecl install excimer && echo "extension=excimer.so" > /etc/php83/conf.d/50_excimer.ini
 

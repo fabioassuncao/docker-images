@@ -1,6 +1,6 @@
-FROM php:8.2-fpm-bullseye
+FROM php:8.2-fpm-bookworm
 LABEL Maintainer="Fábio Assunçãp <fabio23gt@gmail.com>"
-LABEL Description="Lightweight container with PHP 8.2 and nginx based on Debian bullseye."
+LABEL Description="Lightweight container with PHP 8.2 and nginx based on Debian bookworm."
 
 ARG WWWGROUP=33
 ARG WWWUSER=33
@@ -13,7 +13,7 @@ ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update \
-    && apt-get install -y gnupg gosu curl ca-certificates zip unzip pv libzip-dev git supervisor libcap2-bin libpng-dev python2 \
+    && apt-get install -y gnupg gosu curl ca-certificates zip unzip pv libzip-dev git supervisor libcap2-bin libpng-dev \
     && apt-get install -y nginx \
     && apt-get install -y default-mysql-client libpq-dev \
     && apt-get install -y libldap2-dev libc-client-dev libkrb5-dev \
@@ -29,6 +29,7 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
     && docker-php-ext-enable redis \
     && docker-php-ext-enable imagick \
     && docker-php-ext-install gmp \
+    && rm -f /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
     && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
     && apt-get -y autoremove \
     && apt-get clean \
